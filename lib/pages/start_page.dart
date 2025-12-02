@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:programming_languages_frontend/constants/app_colors.dart';
 import 'package:programming_languages_frontend/pages/user_selection_page.dart';
 
 class StartPage extends StatelessWidget {
@@ -25,7 +26,7 @@ class StartPage extends StatelessWidget {
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
                 ),
-                backgroundColor: const Color(0xFF30B0B0),
+                backgroundColor: AppColors.cyan,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),

@@ -19,7 +19,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        foregroundColor: AppColors.fontColorPrimary,
+        foregroundColor: AppColors.cyan,
         backgroundColor: AppColors.primaryColor,
       ),
       body: Container(
@@ -31,20 +31,20 @@ class _LoginState extends State<Login> {
             TextField(
               controller: phoneController,
               keyboardType: TextInputType.number,
-              style: TextStyle(color: AppColors.fontColorPrimary),
+              style: TextStyle(color: AppColors.cyan),
               decoration: InputDecoration(
-                prefixIcon: Icon(Icons.phone, color: AppColors.fontColorPrimary),
+                prefixIcon: Icon(Icons.phone, color: AppColors.cyan),
                 filled: true,
                 fillColor: AppColors.primaryColor,
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.fontColorPrimary),
+                  borderSide: BorderSide(color: AppColors.cyan),
                   borderRadius: BorderRadius.circular(15),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.fontColorPrimary, width: 2),
+                  borderSide: BorderSide(color: AppColors.cyan, width: 2),
                   borderRadius: BorderRadius.circular(15),
                 ),
-                hintStyle: TextStyle(color: AppColors.fontColorPrimary),
+                hintStyle: TextStyle(color: AppColors.cyan),
                 hintText: "Phone Number",
               ),
             ),
@@ -52,20 +52,20 @@ class _LoginState extends State<Login> {
             TextField(
               controller: passwordController,
               obscureText: true,
-              style: TextStyle(color: AppColors.fontColorPrimary),
+              style: TextStyle(color: AppColors.cyan),
               decoration: InputDecoration(
-                prefixIcon: Icon(Icons.lock, color: AppColors.fontColorPrimary),
+                prefixIcon: Icon(Icons.lock, color: AppColors.cyan),
                 filled: true,
                 fillColor: AppColors.primaryColor,
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.fontColorPrimary),
+                  borderSide: BorderSide(color: AppColors.cyan),
                   borderRadius: BorderRadius.circular(15),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.fontColorPrimary, width: 2),
+                  borderSide: BorderSide(color: AppColors.cyan, width: 2),
                   borderRadius: BorderRadius.circular(15),
                 ),
-                hintStyle: TextStyle(color: AppColors.fontColorPrimary),
+                hintStyle: TextStyle(color: AppColors.cyan),
                 hintText: "Password",
               ),
             ),
@@ -76,7 +76,7 @@ class _LoginState extends State<Login> {
                   MaterialPageRoute(builder: (context) => const Homepage()),
                 );
               },
-              color: AppColors.fontColorPrimary,
+              color: AppColors.cyan,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -100,7 +100,7 @@ class _LoginState extends State<Login> {
                       MaterialPageRoute(builder: (context) => const SignIn()),
                     );
                   },
-                  color: AppColors.fontColorPrimary,
+                  color: AppColors.cyan,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),

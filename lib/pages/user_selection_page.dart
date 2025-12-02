@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:programming_languages_frontend/constants/app_colors.dart';
 
 import 'login_page.dart';
 
@@ -14,46 +15,66 @@ class _UserSelectionPageState extends State<UserSelectionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _buildUserButton(
-              icon: Icons.person,
-              label: "Tenant",
-              color: Colors.blue,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Login()),
-                );
-              },
+      body: Column(
+        children: [
+          const SizedBox(height: 40),
+          const Text(
+            "Choose your role",
+            style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700),
+          ),
+          const SizedBox(height: 6),
+          const Text(
+            "How You Want to Proceed",
+            style: TextStyle(fontSize: 16, color: Colors.grey),
+          ),
+          const SizedBox(height: 60),
+          Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildUserButton(
+                  icon: Icons.person,
+                  label: "Tenant",
+                  color: AppColors.cyan,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const Login()),
+                    );
+                  },
+                ),
+                const SizedBox(width: 20),
+                _buildUserButton(
+                  icon: Icons.home,
+                  label: "Owner",
+                  color: AppColors.darkCyan,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const Login()),
+                    );
+                  },
+                ),
+              ],
             ),
-            const SizedBox(width: 20),
-            _buildUserButton(
-              icon: Icons.home,
-              label: "Owner",
-              color: Colors.green,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Login()),
-                );
-              },
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
+}
 
-  Widget _buildUserButton({
-    required IconData icon,
-    required String label,
-    required Color color,
-    required VoidCallback onPressed,
-  }) {
-    return SizedBox(
+Widget _buildUserButton({
+  required IconData icon,
+  required String label,
+  required Color color,
+  required VoidCallback onPressed,
+}) {
+  return InkWell(
+    onTap: onPressed,
+    borderRadius: BorderRadius.circular(20),
+    splashColor: AppColors.cyan,
+    child: SizedBox(
       width: 160,
       height: 160,
       child: ElevatedButton(
@@ -81,6 +102,6 @@ class _UserSelectionPageState extends State<UserSelectionPage> {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
 }

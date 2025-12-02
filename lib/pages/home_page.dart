@@ -27,31 +27,31 @@ class _HomepageState extends State<Homepage> {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        foregroundColor: AppColors.fontColorPrimary,
+        foregroundColor: AppColors.cyan,
         backgroundColor: AppColors.primaryColor,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("APP", style: TextStyle(color: AppColors.fontColorPrimary)),
+            Text("APP", style: TextStyle(color: AppColors.cyan)),
           ],
         ),
       ),
       drawer: Drawer(
         elevation: 100,
-        surfaceTintColor: AppColors.fontColorPrimary,
-        shadowColor: AppColors.fontColorPrimary,
+        surfaceTintColor: AppColors.cyan,
+        shadowColor: AppColors.cyan,
         backgroundColor: AppColors.primaryColor,
         child: Column(
           children: [
             SwitchListTile(
-              inactiveTrackColor: AppColors.fontColorPrimary,
-              activeThumbColor: AppColors.fontColorPrimary,
+              inactiveTrackColor: AppColors.cyan,
+              activeThumbColor: AppColors.cyan,
               secondary: const Icon(Icons.dark_mode),
               title: Text(
                 "Dark Mode",
                 style: TextStyle(
                   fontSize: 20,
-                  color: AppColors.fontColorPrimary,
+                  color: AppColors.cyan,
                 ),
               ),
               value: isDarkMode,
@@ -60,10 +60,10 @@ class _HomepageState extends State<Homepage> {
                   isDarkMode = val;
                   if (isDarkMode) {
                     AppColors.primaryColor = Colors.black;
-                    AppColors.fontColorPrimary = Colors.red;
+                    AppColors.cyan = Colors.red;
                   } else {
                     AppColors.primaryColor = Colors.white;
-                    AppColors.fontColorPrimary = Colors.blue;
+                    AppColors.cyan = Colors.blue;
                   }
                 });
               },
@@ -79,11 +79,11 @@ class _HomepageState extends State<Homepage> {
                         backgroundColor: AppColors.primaryColor,
                         title: Text(
                           "Warning",
-                          style: TextStyle(color: AppColors.fontColorPrimary),
+                          style: TextStyle(color: AppColors.cyan),
                         ),
                         content: Text(
                           "Are You Sure?",
-                          style: TextStyle(color: AppColors.fontColorPrimary),
+                          style: TextStyle(color: AppColors.cyan),
                         ),
                         actions: [
                           TextButton(
@@ -97,7 +97,7 @@ class _HomepageState extends State<Homepage> {
                             },
                             child: Text(
                               "Yes",
-                              style: TextStyle(color: AppColors.fontColorPrimary),
+                              style: TextStyle(color: AppColors.cyan),
                             ),
                           ),
                         ],
@@ -111,13 +111,13 @@ class _HomepageState extends State<Homepage> {
                     Text(
                       "Log Out",
                       style: TextStyle(
-                        color: AppColors.fontColorPrimary,
+                        color: AppColors.cyan,
                         fontSize: 20,
                       ),
                     ),
                     Icon(
                       Icons.logout_outlined,
-                      color: AppColors.fontColorPrimary,
+                      color: AppColors.cyan,
                       size: 20,
                     ),
                   ],
@@ -138,30 +138,30 @@ class _HomepageState extends State<Homepage> {
             selectedIndex = value;
           });
         },
-        selectedItemColor: AppColors.fontColorPrimary,
-        unselectedItemColor: AppColors.fontColorPrimary,
+        selectedItemColor: AppColors.cyan,
+        unselectedItemColor: AppColors.cyan,
         selectedFontSize: 20,
         backgroundColor: AppColors.primaryColor,
         type: BottomNavigationBarType.fixed,
         items: [
           BottomNavigationBarItem(
-            backgroundColor: AppColors.fontColorPrimary,
-            icon: Icon(Icons.home, color: AppColors.fontColorPrimary),
+            backgroundColor: AppColors.cyan,
+            icon: Icon(Icons.home, color: AppColors.cyan),
             label: "Home",
           ),
           BottomNavigationBarItem(
             backgroundColor: AppColors.primaryColor,
-            icon: Icon(Icons.email, color: AppColors.fontColorPrimary),
+            icon: Icon(Icons.email, color: AppColors.cyan),
             label: "Message",
           ),
           BottomNavigationBarItem(
             backgroundColor: AppColors.primaryColor,
-            icon: Icon(Icons.history, color: AppColors.fontColorPrimary),
+            icon: Icon(Icons.history, color: AppColors.cyan),
             label: "Bookings",
           ),
           BottomNavigationBarItem(
-            backgroundColor: AppColors.fontColorPrimary,
-            icon: Icon(Icons.person, color: AppColors.fontColorPrimary),
+            backgroundColor: AppColors.cyan,
+            icon: Icon(Icons.person, color: AppColors.cyan),
             label: "Profile",
           ),
         ],

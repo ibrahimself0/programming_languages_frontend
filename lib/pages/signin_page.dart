@@ -18,7 +18,7 @@ class _SignInState extends State<SignIn> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        foregroundColor: AppColors.fontColorPrimary,
+        foregroundColor: AppColors.cyan,
         backgroundColor: AppColors.primaryColor,
       ),
       body: Container(
@@ -30,20 +30,20 @@ class _SignInState extends State<SignIn> {
             TextField(
               controller: firstNameController,
               keyboardType: TextInputType.number,
-              style: TextStyle(color: AppColors.fontColorPrimary),
+              style: TextStyle(color: AppColors.cyan),
               decoration: InputDecoration(
-                prefixIcon: Icon(Icons.person, color: AppColors.fontColorPrimary),
+                prefixIcon: Icon(Icons.person, color: AppColors.cyan),
                 filled: true,
                 fillColor: AppColors.primaryColor,
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.fontColorPrimary),
+                  borderSide: BorderSide(color: AppColors.cyan),
                   borderRadius: BorderRadius.circular(15),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.fontColorPrimary, width: 2),
+                  borderSide: BorderSide(color: AppColors.cyan, width: 2),
                   borderRadius: BorderRadius.circular(15),
                 ),
-                hintStyle: TextStyle(color: AppColors.fontColorPrimary),
+                hintStyle: TextStyle(color: AppColors.cyan),
                 hintText: "First Name",
               ),
             ),
@@ -51,20 +51,20 @@ class _SignInState extends State<SignIn> {
             TextField(
               controller: lastNameController,
               keyboardType: TextInputType.number,
-              style: TextStyle(color: AppColors.fontColorPrimary),
+              style: TextStyle(color: AppColors.cyan),
               decoration: InputDecoration(
-                prefixIcon: Icon(Icons.person, color: AppColors.fontColorPrimary),
+                prefixIcon: Icon(Icons.person, color: AppColors.cyan),
                 filled: true,
                 fillColor: AppColors.primaryColor,
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.fontColorPrimary),
+                  borderSide: BorderSide(color: AppColors.cyan),
                   borderRadius: BorderRadius.circular(15),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.fontColorPrimary, width: 2),
+                  borderSide: BorderSide(color: AppColors.cyan, width: 2),
                   borderRadius: BorderRadius.circular(15),
                 ),
-                hintStyle: TextStyle(color: AppColors.fontColorPrimary),
+                hintStyle: TextStyle(color: AppColors.cyan),
                 hintText: "Last Name",
               ),
             ),
@@ -72,20 +72,20 @@ class _SignInState extends State<SignIn> {
             TextField(
               controller: dobController,
               keyboardType: TextInputType.number,
-              style: TextStyle(color: AppColors.fontColorPrimary),
+              style: TextStyle(color: AppColors.cyan),
               decoration: InputDecoration(
-                prefixIcon: Icon(Icons.calendar_today, color: AppColors.fontColorPrimary),
+                prefixIcon: Icon(Icons.calendar_today, color: AppColors.cyan),
                 filled: true,
                 fillColor: AppColors.primaryColor,
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.fontColorPrimary),
+                  borderSide: BorderSide(color: AppColors.cyan),
                   borderRadius: BorderRadius.circular(15),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.fontColorPrimary, width: 2),
+                  borderSide: BorderSide(color: AppColors.cyan, width: 2),
                   borderRadius: BorderRadius.circular(15),
                 ),
-                hintStyle: TextStyle(color: AppColors.fontColorPrimary),
+                hintStyle: TextStyle(color: AppColors.cyan),
                 hintText: "Date OF Birth",
               ),
             ),

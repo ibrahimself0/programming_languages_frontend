@@ -16,12 +16,12 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        foregroundColor: AppColors.fontColorPrimary,
+        foregroundColor: AppColors.cyan,
         backgroundColor: AppColors.primaryColor,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("Home", style: TextStyle(color: AppColors.fontColorPrimary)),
+            Text("Home", style: TextStyle(color: AppColors.cyan)),
             SizedBox(
               width: 150,
               height: 40,
@@ -32,18 +32,18 @@ class _HomeViewState extends State<HomeView> {
       ),
       drawer: Drawer(
         elevation: 100,
-        surfaceTintColor: AppColors.fontColorPrimary,
-        shadowColor: AppColors.fontColorPrimary,
+        surfaceTintColor: AppColors.cyan,
+        shadowColor: AppColors.cyan,
         backgroundColor: AppColors.primaryColor,
         child: Column(
           children: [
             SwitchListTile(
-              inactiveTrackColor: AppColors.fontColorPrimary,
-              activeThumbColor: AppColors.fontColorPrimary,
+              inactiveTrackColor: AppColors.cyan,
+              activeThumbColor: AppColors.cyan,
               secondary: Icon(Icons.dark_mode),
               title: Text(
                 "Dark Mode",
-                style: TextStyle(fontSize: 20, color: AppColors.fontColorPrimary),
+                style: TextStyle(fontSize: 20, color: AppColors.cyan),
               ),
               value: isDarkMode,
               onChanged: (val) {
@@ -51,10 +51,10 @@ class _HomeViewState extends State<HomeView> {
                   isDarkMode = val;
                   if (isDarkMode) {
                     AppColors.primaryColor = Colors.black;
-                    AppColors.fontColorPrimary = Colors.red;
+                    AppColors.cyan = Colors.red;
                   } else {
                     AppColors.primaryColor = Colors.white;
-                    AppColors.fontColorPrimary = Colors.blue;
+                    AppColors.cyan = Colors.blue;
                   }
                 });
               },
@@ -68,8 +68,8 @@ class _HomeViewState extends State<HomeView> {
                     builder: (context) {
                       return AlertDialog(
                         backgroundColor: AppColors.primaryColor,
-                        title: Text("Warning", style: TextStyle(color: AppColors.fontColorPrimary)),
-                        content: Text("Are You Sure?", style: TextStyle(color: AppColors.fontColorPrimary)),
+                        title: Text("Warning", style: TextStyle(color: AppColors.cyan)),
+                        content: Text("Are You Sure?", style: TextStyle(color: AppColors.cyan)),
                         actions: [
                           TextButton(
                             onPressed: () {
@@ -78,7 +78,7 @@ class _HomeViewState extends State<HomeView> {
                                     (route) => false,
                               );
                             },
-                            child: Text("Yes", style: TextStyle(color: AppColors.fontColorPrimary)),
+                            child: Text("Yes", style: TextStyle(color: AppColors.cyan)),
                           ),
                         ],
                       );
@@ -88,8 +88,8 @@ class _HomeViewState extends State<HomeView> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("LogOut", style: TextStyle(color: AppColors.fontColorPrimary, fontSize: 20)),
-                    Icon(Icons.logout_outlined, color: AppColors.fontColorPrimary, size: 20),
+                    Text("LogOut", style: TextStyle(color: AppColors.cyan, fontSize: 20)),
+                    Icon(Icons.logout_outlined, color: AppColors.cyan, size: 20),
                   ],
                 ),
               ),
