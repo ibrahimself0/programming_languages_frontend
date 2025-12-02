@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:programming_languages_frontend/constants/app_colors.dart';
 
+import '../data/notifiers.dart';
 import 'login_page.dart';
 
 class UserSelectionPage extends StatefulWidget {
@@ -11,6 +12,12 @@ class UserSelectionPage extends StatefulWidget {
 }
 
 class _UserSelectionPageState extends State<UserSelectionPage> {
+  @override
+  void initState() {
+    super.initState();
+    isDarkModeNotifier.value = false;
+    AppColors.primaryColor = Colors.white;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

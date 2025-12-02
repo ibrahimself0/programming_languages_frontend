@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:programming_languages_frontend/pages/signin_page.dart';
 
 import '../constants/app_colors.dart';
+import '../data/notifiers.dart';
 import 'home_page.dart';
 
 class Login extends StatefulWidget {
@@ -14,9 +15,9 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
+    AppColors.primaryColor = Colors.white;
     return Scaffold(
       appBar: AppBar(
         foregroundColor: AppColors.cyan,

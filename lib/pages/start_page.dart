@@ -3,8 +3,22 @@ import 'package:lottie/lottie.dart';
 import 'package:programming_languages_frontend/constants/app_colors.dart';
 import 'package:programming_languages_frontend/pages/user_selection_page.dart';
 
-class StartPage extends StatelessWidget {
+import '../data/notifiers.dart';
+
+class StartPage extends StatefulWidget {
   const StartPage({super.key});
+
+  @override
+  State<StartPage> createState() => _StartPageState();
+}
+
+class _StartPageState extends State<StartPage> {
+  @override
+  void initState() {
+    super.initState();
+    isDarkModeNotifier.value = false;
+    AppColors.primaryColor = Colors.white;
+  }
 
   @override
   Widget build(BuildContext context) {
