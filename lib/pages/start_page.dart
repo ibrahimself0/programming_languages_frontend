@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:programming_languages_frontend/constants/app_colors.dart';
+import 'package:lottie/lottie.dart';
 import 'package:programming_languages_frontend/pages/user_selection_page.dart';
 
 class StartPage extends StatelessWidget {
@@ -13,25 +13,33 @@ class StartPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              "Welcome",
-              style: TextStyle(fontSize: AppColors.fontSize),
-            ),
+            Lottie.asset('assets/lotties/BlueHouse.json'),
             const SizedBox(height: 20),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                textStyle: const TextStyle(fontSize: 20),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 40,
+                  vertical: 18,
+                ),
+                textStyle: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                ),
+                backgroundColor: const Color(0xFF30B0B0),
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                elevation: 6,
+                shadowColor: Colors.black,
               ),
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => UserSelectionPage(),
-                  ),
+                  MaterialPageRoute(builder: (context) => UserSelectionPage()),
                 );
               },
-              child: const Text("let's start"),
+              child: const Text("Get Started"),
             ),
           ],
         ),
