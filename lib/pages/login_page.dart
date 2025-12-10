@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:programming_languages_frontend/pages/signin_page.dart';
 
 import '../constants/app_colors.dart';
-import '../data/notifiers.dart';
 import 'home_page.dart';
 
 class Login extends StatefulWidget {
@@ -17,15 +16,11 @@ class _LoginState extends State<Login> {
   final TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    AppColors.primaryColor = Colors.white;
     return Scaffold(
-      appBar: AppBar(
-        foregroundColor: AppColors.cyan,
-        backgroundColor: AppColors.primaryColor,
-      ),
+      appBar: AppBar(backgroundColor: Colors.white,),
       body: Container(
+        color:Colors.white,
         padding: const EdgeInsets.all(10),
-        color: AppColors.primaryColor,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -36,7 +31,7 @@ class _LoginState extends State<Login> {
               decoration: InputDecoration(
                 prefixIcon: Icon(Icons.phone, color: AppColors.cyan),
                 filled: true,
-                fillColor: AppColors.primaryColor,
+                fillColor: Colors.white,
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: AppColors.cyan),
                   borderRadius: BorderRadius.circular(15),
@@ -57,7 +52,7 @@ class _LoginState extends State<Login> {
               decoration: InputDecoration(
                 prefixIcon: Icon(Icons.lock, color: AppColors.cyan),
                 filled: true,
-                fillColor: AppColors.primaryColor,
+                fillColor: Colors.white,
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: AppColors.cyan),
                   borderRadius: BorderRadius.circular(15),
@@ -85,7 +80,7 @@ class _LoginState extends State<Login> {
               child: Text(
                 "Confirm",
                 style: TextStyle(
-                  color: AppColors.primaryColor,
+                  color: Colors.white,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -109,7 +104,7 @@ class _LoginState extends State<Login> {
                   child: Text(
                     "Create Account",
                     style: TextStyle(
-                      color: AppColors.primaryColor,
+                      color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),

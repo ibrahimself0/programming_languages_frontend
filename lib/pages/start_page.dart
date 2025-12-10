@@ -16,6 +16,7 @@ class _StartPageState extends State<StartPage> {
   @override
   void initState() {
     super.initState();
+
     isDarkModeNotifier.value = false;
     AppColors.primaryColor = Colors.white;
   }
@@ -36,25 +37,33 @@ class _StartPageState extends State<StartPage> {
                   horizontal: 40,
                   vertical: 18,
                 ),
-                textStyle: const TextStyle(
+                textStyle: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
+                  color:Colors.white,
                 ),
                 backgroundColor: AppColors.cyan,
-                foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
                 elevation: 6,
-                shadowColor: Colors.black,
+                shadowColor: AppColors.darkCyan,
               ),
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => UserSelectionPage()),
+                  MaterialPageRoute(
+                    builder: (context) => const UserSelectionPage(),
+                  ),
                 );
               },
-              child: const Text("Get Started"),
+              child: Text(
+                "Get Started",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: AppColors.fontSize / 2,
+                ),
+              ),
             ),
           ],
         ),

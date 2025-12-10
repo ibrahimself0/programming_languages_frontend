@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:programming_languages_frontend/constants/app_colors.dart';
 
-import '../data/notifiers.dart';
 import 'login_page.dart';
 
 class UserSelectionPage extends StatefulWidget {
@@ -13,59 +12,57 @@ class UserSelectionPage extends StatefulWidget {
 
 class _UserSelectionPageState extends State<UserSelectionPage> {
   @override
-  void initState() {
-    super.initState();
-    isDarkModeNotifier.value = false;
-    AppColors.primaryColor = Colors.white;
-  }
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: Column(
-        children: [
-          const SizedBox(height: 40),
-          const Text(
-            "Choose your role",
-            style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700),
-          ),
-          const SizedBox(height: 6),
-          const Text(
-            "How You Want to Proceed",
-            style: TextStyle(fontSize: 16, color: Colors.grey),
-          ),
-          const SizedBox(height: 60),
-          Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildUserButton(
-                  icon: Icons.person,
-                  label: "Tenant",
-                  color: AppColors.cyan,
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const Login()),
-                    );
-                  },
-                ),
-                const SizedBox(width: 20),
-                _buildUserButton(
-                  icon: Icons.home,
-                  label: "Owner",
-                  color: AppColors.darkCyan,
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const Login()),
-                    );
-                  },
-                ),
-              ],
+      // for Spacing
+      appBar: AppBar(backgroundColor: Colors.white),
+      body: Container(
+        color: Colors.white,
+        child: Column(
+          children: [
+            const SizedBox(height: 40),
+            const Text(
+              "Choose your role",
+              style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700),
             ),
-          ),
-        ],
+            const SizedBox(height: 6),
+            const Text(
+              "How You Want to Proceed",
+              style: TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+            const SizedBox(height: 60),
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _buildUserButton(
+                    icon: Icons.person,
+                    label: "Tenant",
+                    color: AppColors.cyan,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const Login()),
+                      );
+                    },
+                  ),
+                  const SizedBox(width: 20),
+                  _buildUserButton(
+                    icon: Icons.home,
+                    label: "Owner",
+                    color: AppColors.darkCyan,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const Login()),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
