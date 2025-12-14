@@ -2,59 +2,54 @@ import 'package:flutter/material.dart';
 import 'package:programming_languages_frontend/pages/start_page.dart';
 
 import '../constants/app_colors.dart';
-import 'home_views.dart';
-
-class Homepage extends StatefulWidget {
-  const Homepage({super.key});
+import '../data/notifiers.dart';
+import 'main_pages.dart';
+class NavBar extends StatefulWidget {
+  const NavBar({super.key});
 
   @override
-  State<Homepage> createState() => _HomepageState();
+  State<NavBar> createState() => _NavBarState();
 }
 
-class _HomepageState extends State<Homepage> {
-  bool state = false;
+class _NavBarState extends State<NavBar> {
+  List<Widget> listWidget = [
+    HomeView(),
+    HomeSecondaryView(),
+    HomeTertiaryView(),
+    ProfileView(),
+  ];
+
+  int selectedIndex = 0;
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: DefaultTabController(
-        length: 4,
-        child: Scaffold(
+    return ValueListenableBuilder(
+      valueListenable: isDarkModeNotifier,
+      builder: (context, value, child) {
+        return Scaffold(
+          backgroundColor: AppColors.primaryColor,
+          key: scaffoldKey,
           appBar: AppBar(
+            foregroundColor: AppColors.cyan,
             backgroundColor: AppColors.primaryColor,
-            centerTitle: true,
-            title: Text("Application",style: TextStyle(color: AppColors.cyan),),
-            bottom: TabBar(
-              dividerColor: AppColors.primaryColor,
-              labelColor: AppColors.cyan,
-              indicatorColor: AppColors.cyan,
-              tabs: const [
-                Tab(icon: Icon(Icons.home), text: "Home"),
-                Tab(icon: Icon(Icons.email), text: "Message"),
-                Tab(icon: Icon(Icons.history), text: "Booking"),
-                Tab(icon: Icon(Icons.person), text: "Profile"),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("APP", style: TextStyle(color: AppColors.cyan)),
               ],
             ),
           ),
-          body: TabBarView(
-            children: const [
-              HomeView(),
-              HomeSecondaryView(),
-              HomeTertiaryView(),
-              ProfileView(),
-            ],
-          ),
           drawer: Drawer(
             elevation: 100,
-            //If we want to make the drawer color more cyanny
-            //surfaceTintColor: AppColors.cyan,
+            surfaceTintColor: AppColors.cyan,
             shadowColor: AppColors.cyan,
             backgroundColor: AppColors.primaryColor,
             child: Column(
               children: [
                 SwitchListTile(
                   inactiveTrackColor: AppColors.cyan,
-                  activeTrackColor: AppColors.darkCyan,
+                  activeThumbColor: AppColors.cyan,
                   secondary: const Icon(Icons.dark_mode),
                   title: Text(
                     "Dark Mode",
@@ -63,11 +58,11 @@ class _HomepageState extends State<Homepage> {
                       color: AppColors.cyan,
                     ),
                   ),
-                  value: state,
+                  value: isDarkModeNotifier.value,
                   onChanged: (val) {
                     setState(() {
-                      state = val;
-                      if (state) {
+                      isDarkModeNotifier.value = val;
+                      if (isDarkModeNotifier.value) {
                         AppColors.primaryColor = Colors.black;
                       } else {
                         AppColors.primaryColor = Colors.white;
@@ -86,32 +81,25 @@ class _HomepageState extends State<Homepage> {
                             backgroundColor: AppColors.primaryColor,
                             title: Text(
                               "Warning",
-                              style: TextStyle(
-                                color: AppColors.cyan,
-                              ),
+                              style: TextStyle(color: AppColors.cyan),
                             ),
                             content: Text(
                               "Are You Sure?",
-                              style: TextStyle(
-                                color: AppColors.cyan,
-                              ),
+                              style: TextStyle(color: AppColors.cyan),
                             ),
                             actions: [
                               TextButton(
                                 onPressed: () {
-                                  AppColors.primaryColor = Colors.white;
                                   Navigator.of(context).pushAndRemoveUntil(
                                     MaterialPageRoute(
                                       builder: (context) => const StartPage(),
                                     ),
-                                    (route) => false,
+                                        (route) => false,
                                   );
                                 },
                                 child: Text(
                                   "Yes",
-                                  style: TextStyle(
-                                    color: AppColors.cyan,
-                                  ),
+                                  style: TextStyle(color: AppColors.cyan),
                                 ),
                               ),
                             ],
@@ -123,7 +111,7 @@ class _HomepageState extends State<Homepage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "LogOut",
+                          "Log Out",
                           style: TextStyle(
                             color: AppColors.cyan,
                             fontSize: 20,
@@ -141,8 +129,47 @@ class _HomepageState extends State<Homepage> {
               ],
             ),
           ),
-        ),
-      ),
+          body: Container(
+            padding: const EdgeInsets.all(5),
+            child: listWidget.elementAt(selectedIndex),
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: selectedIndex,
+            onTap: (value) {
+              setState(() {
+                selectedIndex = value;
+              });
+            },
+            selectedItemColor: AppColors.cyan,
+            unselectedItemColor: AppColors.cyan,
+            selectedFontSize: 20,
+            backgroundColor: AppColors.primaryColor,
+            type: BottomNavigationBarType.fixed,
+            items: [
+              BottomNavigationBarItem(
+                backgroundColor: AppColors.cyan,
+                icon: Icon(Icons.home, color: AppColors.cyan),
+                label: "Home",
+              ),
+              BottomNavigationBarItem(
+                backgroundColor: AppColors.primaryColor,
+                icon: Icon(Icons.email, color: AppColors.cyan),
+                label: "Message",
+              ),
+              BottomNavigationBarItem(
+                backgroundColor: AppColors.primaryColor,
+                icon: Icon(Icons.history, color: AppColors.cyan),
+                label: "Bookings",
+              ),
+              BottomNavigationBarItem(
+                backgroundColor: AppColors.cyan,
+                icon: Icon(Icons.person, color: AppColors.cyan),
+                label: "Profile",
+              ),
+            ],
+          ),
+        );
+      }
     );
   }
 }

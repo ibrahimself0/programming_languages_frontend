@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:programming_languages_frontend/pages/signin_page.dart';
 
 import '../constants/app_colors.dart';
-import 'home_page.dart';
+import 'navigation.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -69,7 +69,7 @@ class _LoginState extends State<Login> {
             MaterialButton(
               onPressed: () {
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const Homepage()),
+                  MaterialPageRoute(builder: (context) => const NavBar()),
                 );
               },
               color: AppColors.cyan,

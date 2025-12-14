@@ -17,10 +17,13 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor: Colors.white,),
+      appBar: AppBar(
+        foregroundColor: AppColors.cyan,
+        backgroundColor: AppColors.primaryColor,
+      ),
       body: Container(
         padding: const EdgeInsets.all(10),
-        color: Colors.white,
+        color: AppColors.primaryColor,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -31,7 +34,7 @@ class _SignInState extends State<SignIn> {
               decoration: InputDecoration(
                 prefixIcon: Icon(Icons.person, color: AppColors.cyan),
                 filled: true,
-                fillColor: Colors.white,
+                fillColor: AppColors.primaryColor,
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: AppColors.cyan),
                   borderRadius: BorderRadius.circular(15),
@@ -52,7 +55,7 @@ class _SignInState extends State<SignIn> {
               decoration: InputDecoration(
                 prefixIcon: Icon(Icons.person, color: AppColors.cyan),
                 filled: true,
-                fillColor: Colors.white,
+                fillColor: AppColors.primaryColor,
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: AppColors.cyan),
                   borderRadius: BorderRadius.circular(15),
@@ -73,7 +76,7 @@ class _SignInState extends State<SignIn> {
               decoration: InputDecoration(
                 prefixIcon: Icon(Icons.calendar_today, color: AppColors.cyan),
                 filled: true,
-                fillColor: Colors.white,
+                fillColor: AppColors.primaryColor,
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: AppColors.cyan),
                   borderRadius: BorderRadius.circular(15),
