@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:programming_languages_frontend/pages/profile_view.dart';
 
 
 import '../constants/app_colors.dart';
 import '../data/notifiers.dart';
-import 'main_pages.dart';
+import 'bookings_view.dart';
+import 'home_second_view.dart';
+import 'home_view.dart';
 class NavBar extends StatefulWidget {
   const NavBar({super.key});
 
