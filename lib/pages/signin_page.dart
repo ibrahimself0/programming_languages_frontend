@@ -135,7 +135,7 @@ class _SignInState extends State<SignIn> {
             MaterialButton(
               onPressed: () {
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const NavBar()),
+                  MaterialPageRoute(builder: (context) => const NavBar(selectedPage: 0,)),
                 );
               },
               color: AppColors.cyan,

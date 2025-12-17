@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:programming_languages_frontend/pages/profile_view.dart';
 
 import '../constants/app_colors.dart';
+import 'navigation.dart';
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
 
@@ -94,8 +94,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
             MaterialButton(
               onPressed: () {
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const ProfileView()),
-                );
+                  MaterialPageRoute(builder: (context) {
+                    return NavBar(selectedPage: 3);
+                  }
+                ));
               },
               color: AppColors.cyan,
               shape: RoundedRectangleBorder(

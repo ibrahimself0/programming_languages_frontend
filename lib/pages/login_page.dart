@@ -71,7 +71,7 @@ class _LoginState extends State<Login> {
             MaterialButton(
               onPressed: () {
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const NavBar()),
+                  MaterialPageRoute(builder: (context) => const NavBar(selectedPage: 0,)),
                 );
               },
               color: AppColors.cyan,

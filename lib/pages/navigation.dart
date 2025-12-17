@@ -8,8 +8,8 @@ import 'bookings_view.dart';
 import 'home_second_view.dart';
 import 'home_view.dart';
 class NavBar extends StatefulWidget {
-  const NavBar({super.key});
-
+  const NavBar({super.key , required this.selectedPage});
+  final int selectedPage;
   @override
   State<NavBar> createState() => _NavBarState();
 }
@@ -22,7 +22,7 @@ class _NavBarState extends State<NavBar> {
     ProfileView(),
   ];
 
-  int selectedIndex = 0;
+  late int selectedIndex = widget.selectedPage;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
   @override
