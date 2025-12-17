@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:programming_languages_frontend/pages/user_selection_page.dart';
 
 import 'signin_page.dart';
 
@@ -95,7 +96,7 @@ class _LoginState extends State<Login> {
                 MaterialButton(
                   onPressed: () {
                     Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => const SignIn()),
+                      MaterialPageRoute(builder: (context) => const UserSelectionPage()),
                     );
                   },
                   color: AppColors.cyan,

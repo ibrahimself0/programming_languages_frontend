@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../constants/app_colors.dart';
+import 'navigation.dart';
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
 
@@ -87,6 +88,26 @@ class _SignInState extends State<SignIn> {
                 ),
                 hintStyle: TextStyle(color: AppColors.cyan),
                 hintText: "Date OF Birth",
+              ),
+            ),
+            MaterialButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const NavBar()),
+                );
+              },
+              color: AppColors.cyan,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Text(
+                "Confirm",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:programming_languages_frontend/pages/login_page.dart';
 
 
 import '../constants/app_colors.dart';
@@ -18,8 +19,6 @@ class _StartPageState extends State<StartPage> {
   @override
   void initState() {
     super.initState();
-
-    isDarkModeNotifier.value = false;
 
     WidgetsBinding.instance.addPostFrameCallback((_){
       isDarkModeNotifier.value = false;
@@ -61,7 +60,7 @@ class _StartPageState extends State<StartPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const UserSelectionPage(),
+                    builder: (context) => const Login(),
                   ),
                 );
               },
