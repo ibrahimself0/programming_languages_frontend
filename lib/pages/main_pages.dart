@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/pages/start_page.dart';
+import 'start_page.dart';
 
 import '../constants/app_colors.dart';
 import '../data/notifiers.dart';

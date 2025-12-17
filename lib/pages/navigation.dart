@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/pages/profile_view.dart';
+import 'profile_view.dart';
 
 
 import '../constants/app_colors.dart';
