@@ -291,7 +291,10 @@ class ApartmentViewDetails extends StatelessWidget {
                   child: MaterialButton(
                     color: AppColors.cyan,
                     onPressed: () {},
-                    child: Text("add", style: TextStyle(color: AppColors.primaryColor)),
+                    child: Text(
+                      "add",
+                      style: TextStyle(color: AppColors.primaryColor),
+                    ),
                   ),
                 ),
                 // Expanded(
@@ -305,30 +308,33 @@ class ApartmentViewDetails extends StatelessWidget {
                   child: MaterialButton(
                     color: AppColors.cyan,
                     onPressed: () {},
-                    child: Text("Rental Request", style: TextStyle(color: AppColors.primaryColor)),
+                    child: Text(
+                      "Rental Request",
+                      style: TextStyle(color: AppColors.primaryColor),
+                    ),
                   ),
                 ),
               ],
             ),
           ),
           Expanded(
-            
             child: Padding(
-
               padding: const EdgeInsets.all(0),
               child: GridView(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-
                   crossAxisCount: 2,
                   mainAxisSpacing: 16,
                   crossAxisSpacing: 16,
                   childAspectRatio: 3,
                 ),
                 children: [
-                  Text("price :",style: TextStyle(color: AppColors.cyan),),
-                  Text("Description :",style: TextStyle(color: AppColors.cyan),),
-                  Text("Location :",style: TextStyle(color: AppColors.cyan),),
-                  Text("Space :",style: TextStyle(color: AppColors.cyan),),
+                  Text("price :", style: TextStyle(color: AppColors.cyan)),
+                  Text(
+                    "Description :",
+                    style: TextStyle(color: AppColors.cyan),
+                  ),
+                  Text("Location :", style: TextStyle(color: AppColors.cyan)),
+                  Text("Space :", style: TextStyle(color: AppColors.cyan)),
                 ],
               ),
             ),
@@ -379,7 +385,7 @@ class _HomeTertiaryViewState extends State<HomeTertiaryView> {
                   child: TabBar(
                     // dividerColor: AppColors.cyan,
                     indicatorColor: AppColors.cyan,
-                    
+
                     tabs: [
                       Tab(text: "finished"),
                       Tab(text: "not-finished"),
@@ -412,64 +418,82 @@ class ProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SizedBox(
-        width: double.infinity,
-        child: TextButton(
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  backgroundColor: AppColors.primaryColor,
-                  title: Text(
-                    "Warning",
-                    style: TextStyle(color: AppColors.cyan),
-                  ),
-                  content: Text(
-                    "Are You Sure?",
-                    style: TextStyle(color: AppColors.cyan),
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                            builder: (context) => const StartPage(),
+    return ValueListenableBuilder(
+      valueListenable: isDarkModeNotifier,
+      builder: (context, value, child) {
+        return Scaffold(
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Spacer(flex: 1),
+
+              CircleAvatar(
+                radius: 60,
+                backgroundImage: AssetImage("assets/images/err.png"),
+              ),
+              const Text(
+                "Shrek",
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+              const Spacer(flex: 4),
+
+              TextButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        backgroundColor: AppColors.primaryColor,
+                        title: Text(
+                          "Warning",
+                          style: TextStyle(color: AppColors.cyan),
+                        ),
+                        content: Text(
+                          "Are You Sure?",
+                          style: TextStyle(color: AppColors.cyan),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                  builder: (context) => const StartPage(),
+                                ),
+                                (route) => false,
+                              );
+                            },
+                            child: Text(
+                              "Yes",
+                              style: TextStyle(color: AppColors.cyan),
+                            ),
                           ),
-                              (route) => false,
-                        );
-                      },
-                      child: Text(
-                        "Yes",
-                        style: TextStyle(color: AppColors.cyan),
-                      ),
+                        ],
+                      );
+                    },
+                  );
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Log Out",
+                      style: TextStyle(color: AppColors.cyan, fontSize: 20),
+                    ),
+                    Icon(
+                      Icons.logout_outlined,
+                      color: AppColors.cyan,
+                      size: 20,
                     ),
                   ],
-                );
-              },
-            );
-          },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Log Out",
-                style: TextStyle(
-                  color: AppColors.cyan,
-                  fontSize: 20,
                 ),
-              ),
-              Icon(
-                Icons.logout_outlined,
-                color: AppColors.cyan,
-                size: 20,
               ),
             ],
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
+
 //edit
