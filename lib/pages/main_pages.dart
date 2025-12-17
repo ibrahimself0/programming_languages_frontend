@@ -422,6 +422,7 @@ class ProfileView extends StatelessWidget {
       valueListenable: isDarkModeNotifier,
       builder: (context, value, child) {
         return Scaffold(
+          backgroundColor: AppColors.primaryColor,
           body: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
