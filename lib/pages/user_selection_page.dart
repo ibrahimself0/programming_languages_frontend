@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:programming_languages_frontend/pages/signin_page.dart';
+import 'signin_page.dart';
 
 
 
 import '../constants/app_colors.dart';
-import 'login_page.dart';
 
 class UserSelectionPage extends StatefulWidget {
   const UserSelectionPage({super.key});

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:programming_languages_frontend/pages/login_page.dart';
+import 'login_page.dart';
 
 
 import '../constants/app_colors.dart';
-import 'user_selection_page.dart';
 
 import '../data/notifiers.dart';
 

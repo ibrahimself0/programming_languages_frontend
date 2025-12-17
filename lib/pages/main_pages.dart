@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:programming_languages_frontend/pages/start_page.dart';
+import 'start_page.dart';
 
 import '../constants/app_colors.dart';
 import '../data/notifiers.dart';
@@ -436,7 +436,7 @@ class ProfileView extends StatelessWidget {
                 "Shrek",
                 style: TextStyle(fontSize: 16, color: Colors.grey),
               ),
-              const Spacer(flex: 4),
+              const Spacer(flex: 5),
 
               TextButton(
                 onPressed: () {
