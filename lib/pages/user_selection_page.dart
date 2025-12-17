@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:app/constants/app_colors.dart';
 
+
+import '../constants/app_colors.dart';
 import 'login_page.dart';
 
 class UserSelectionPage extends StatefulWidget {

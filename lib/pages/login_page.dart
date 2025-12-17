@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:app/pages/signin_page.dart';
+import 'signin_page.dart';
 
 
 import '../constants/app_colors.dart';
