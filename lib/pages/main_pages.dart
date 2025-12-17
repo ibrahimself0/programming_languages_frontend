@@ -1,3 +1,4 @@
+// import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/app_colors.dart';
@@ -121,7 +122,10 @@ class _HomeViewState extends State<HomeView> {
                         });
                       },
                       itemBuilder: (_) => [
-                        const PopupMenuItem(value: "0-500", child: Text("0 - 500")),
+                        const PopupMenuItem(
+                          value: "0-500",
+                          child: Text("0 - 500"),
+                        ),
                         const PopupMenuItem(
                           value: "500-1000",
                           child: Text("500 - 1000"),
@@ -145,8 +149,8 @@ class _HomeViewState extends State<HomeView> {
                       },
                       itemBuilder: (_) => [
                         const PopupMenuItem(
-                            value: "0-100",
-                            child: Text("0-100")
+                          value: "0-100",
+                          child: Text("0-100"),
                         ),
                         const PopupMenuItem(
                           value: "100-150",
@@ -158,7 +162,7 @@ class _HomeViewState extends State<HomeView> {
                         ),
                       ],
                     ),
-        
+
                     PopupMenuButton<String>(
                       icon: Icon(Icons.more_vert, color: AppColors.cyan),
                       onSelected: (value) {},
@@ -167,7 +171,7 @@ class _HomeViewState extends State<HomeView> {
                         const PopupMenuItem(value: "b", child: Text("2")),
                       ],
                     ),
-        
+
                     IconButton(
                       onPressed: () {
                         setState(() {
@@ -181,7 +185,7 @@ class _HomeViewState extends State<HomeView> {
                   ],
                 ),
               ),
-        
+
               Expanded(
                 child: GridView.builder(
                   padding: const EdgeInsets.all(10),
@@ -218,14 +222,14 @@ class _HomeViewState extends State<HomeView> {
                           ),
                           Text(
                             "Price: \$${apt["price"]}",
-                            style: TextStyle(color: AppColors.cyan,),
+                            style: TextStyle(color: AppColors.cyan),
                           ),
                           Text(
                             "Space: ${apt["size"]}",
                             style: TextStyle(color: AppColors.cyan),
                           ),
                           Row(
-                            children:[
+                            children: [
                               const Spacer(),
                               IconButton(
                                 iconSize: 18,
@@ -233,7 +237,8 @@ class _HomeViewState extends State<HomeView> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => ApartmentViewDetails(),
+                                      builder: (context) =>
+                                          ApartmentViewDetails(),
                                     ),
                                   );
                                 },
@@ -253,7 +258,7 @@ class _HomeViewState extends State<HomeView> {
             ],
           ),
         );
-      }
+      },
     );
   }
 }
@@ -263,7 +268,75 @@ class ApartmentViewDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppColors.primaryColor,
+        foregroundColor: AppColors.cyan,
+        title: Text(
+          "ApartmentDetails",
+          style: TextStyle(color: AppColors.cyan),
+        ),
+        centerTitle: true,
+
+        // backgroundColor: AppColors.cyan,
+      ),
+      body: Column(
+        children: [
+          Placeholder(strokeWidth: 4, fallbackHeight: 300),
+          SizedBox(
+            height: 40,
+            child: Row(
+              children: [
+                Expanded(
+                  child: MaterialButton(
+                    color: AppColors.cyan,
+                    onPressed: () {},
+                    child: Text("add", style: TextStyle(color: AppColors.primaryColor)),
+                  ),
+                ),
+                // Expanded(
+                //   child: MaterialButton(
+                //     color: AppColors.primaryColor,
+                //     onPressed: () {},
+                //     child: Text("add", style: TextStyle(color: AppColors.cyan)),
+                //   ),
+                // ),
+                Expanded(
+                  child: MaterialButton(
+                    color: AppColors.cyan,
+                    onPressed: () {},
+                    child: Text("Rental Request", style: TextStyle(color: AppColors.primaryColor)),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+
+            child: Padding(
+
+              padding: const EdgeInsets.all(0),
+              child: GridView(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 16,
+                  crossAxisSpacing: 16,
+                  childAspectRatio: 3,
+                ),
+                children: [
+                  Text("price :",style: TextStyle(color: AppColors.cyan),),
+                  Text("Description :",style: TextStyle(color: AppColors.cyan),),
+                  Text("Location :",style: TextStyle(color: AppColors.cyan),),
+                  Text("Space :",style: TextStyle(color: AppColors.cyan),),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+      backgroundColor: AppColors.primaryColor,
+    );
   }
 }
 
@@ -278,7 +351,7 @@ class HomeSecondaryView extends StatefulWidget {
 class _HomeSecondaryViewState extends State<HomeSecondaryView> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    return Scaffold();
   }
 }
 
@@ -292,7 +365,45 @@ class HomeTertiaryView extends StatefulWidget {
 class _HomeTertiaryViewState extends State<HomeTertiaryView> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    return ValueListenableBuilder(
+      valueListenable: isDarkModeNotifier,
+      builder: (context, value, child) {
+        return DefaultTabController(
+          length: 2,
+          child: Scaffold(
+            // key: scaffoldkey,
+            body: Column(
+              children: [
+                Container(
+                  color: AppColors.primaryColor,
+                  child: TabBar(
+                    // dividerColor: AppColors.cyan,
+                    indicatorColor: AppColors.cyan,
+
+                    tabs: [
+                      Tab(text: "finished"),
+                      Tab(text: "not-finished"),
+                    ],
+                    labelColor: AppColors.cyan,
+                    unselectedLabelColor: AppColors.cyan,
+                  ),
+                ),
+
+                Expanded(
+                  child: TabBarView(
+                    children: [
+                      Center(child: Text("data1")),
+                      Center(child: Text("data2")),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+    // home:
   }
 }
 
