@@ -90,6 +90,48 @@ class _SignInState extends State<SignIn> {
                 hintText: "Date OF Birth",
               ),
             ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: lastNameController,
+              keyboardType: TextInputType.number,
+              style: TextStyle(color: AppColors.cyan),
+              decoration: InputDecoration(
+                prefixIcon: Icon(Icons.phone, color: AppColors.cyan),
+                filled: true,
+                fillColor: AppColors.primaryColor,
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: AppColors.cyan),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: AppColors.cyan, width: 2),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                hintStyle: TextStyle(color: AppColors.cyan),
+                hintText: "Phone Number",
+              ),
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: lastNameController,
+              keyboardType: TextInputType.number,
+              style: TextStyle(color: AppColors.cyan),
+              decoration: InputDecoration(
+                prefixIcon: Icon(Icons.password, color: AppColors.cyan),
+                filled: true,
+                fillColor: AppColors.primaryColor,
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: AppColors.cyan),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: AppColors.cyan, width: 2),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                hintStyle: TextStyle(color: AppColors.cyan),
+                hintText: "Password",
+              ),
+            ),
             MaterialButton(
               onPressed: () {
                 Navigator.of(context).push(
