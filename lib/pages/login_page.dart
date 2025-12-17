@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:programming_languages_frontend/pages/signin_page.dart';
+
+import 'package:app/pages/signin_page.dart';
+
 
 import '../constants/app_colors.dart';
 import 'navigation.dart';

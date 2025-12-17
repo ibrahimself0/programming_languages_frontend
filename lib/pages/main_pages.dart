@@ -1,4 +1,4 @@
-// import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/app_colors.dart';
@@ -312,7 +312,7 @@ class ApartmentViewDetails extends StatelessWidget {
             ),
           ),
           Expanded(
-
+            
             child: Padding(
 
               padding: const EdgeInsets.all(0),
@@ -379,7 +379,7 @@ class _HomeTertiaryViewState extends State<HomeTertiaryView> {
                   child: TabBar(
                     // dividerColor: AppColors.cyan,
                     indicatorColor: AppColors.cyan,
-
+                    
                     tabs: [
                       Tab(text: "finished"),
                       Tab(text: "not-finished"),
@@ -413,5 +413,6 @@ class ProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Placeholder();
+    //jyrrytfyit
   }
 }

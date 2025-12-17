@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:programming_languages_frontend/constants/app_colors.dart';
-import 'package:programming_languages_frontend/pages/user_selection_page.dart';
+
+import 'package:app/constants/app_colors.dart';
+import 'package:app/pages/user_selection_page.dart';
 
 import '../data/notifiers.dart';
 
@@ -18,6 +19,12 @@ class _StartPageState extends State<StartPage> {
     super.initState();
 
     isDarkModeNotifier.value = false;
+
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      isDarkModeNotifier.value = false;
+    });
+    // isDarkModeNotifier.value = false;
+
     AppColors.primaryColor = Colors.white;
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:programming_languages_frontend/constants/app_colors.dart';
+
+import 'package:app/constants/app_colors.dart';
 
 import 'login_page.dart';
 
