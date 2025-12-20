@@ -1,27 +1,28 @@
+import 'package:app/pages/navigation.dart';
+import 'package:app/pages/ownernavigation.dart';
 import 'package:flutter/material.dart';
-
 import '../constants/app_colors.dart';
-import 'navigation.dart';
-
-class SignIn extends StatefulWidget {
-  const SignIn({super.key});
+class OwnerSignIn extends StatefulWidget {
+  const OwnerSignIn({super.key});
 
   @override
-  State<SignIn> createState() => _SignInState();
+  State<OwnerSignIn> createState() => _OwnerSignInState();
 }
 
-class _SignInState extends State<SignIn> {
+class _OwnerSignInState extends State<OwnerSignIn> {
+  
+  
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController datePfbirthController = TextEditingController();
   final TextEditingController phoneNumberController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  GlobalKey<FormState> Signtate = GlobalKey();
+  GlobalKey<FormState> OwnerSigntate = GlobalKey();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Tenent"),
+        title: Text("Owner"),
         foregroundColor: AppColors.cyan,
         backgroundColor: AppColors.primaryColor,
       ),
@@ -29,7 +30,7 @@ class _SignInState extends State<SignIn> {
         padding: const EdgeInsets.all(10),
         color: AppColors.primaryColor,
         child: Form(
-          key: Signtate,
+          key: OwnerSigntate,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -164,10 +165,10 @@ class _SignInState extends State<SignIn> {
               ),
               MaterialButton(
                 onPressed: () {
-                  if (Signtate.currentState!.validate()) {
+                  if (OwnerSigntate.currentState!.validate()) {
                      Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => const NavBar(selectedPage: 0),
+                        builder: (context) => const OwnerNavBar(ownerselectedPage: 0),
                       ),
                     );
                   }

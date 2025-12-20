@@ -8,7 +8,7 @@ class _MainOwnerPageState  extends State<MainOwnerPage> {
   @override
   Widget build(BuildContext context) {
    return Scaffold(
-    
+    appBar: AppBar(title: Text("data"),),
    );
   }
 }

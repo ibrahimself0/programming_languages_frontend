@@ -5,9 +5,8 @@ import 'package:app/pages/edit_profile_view.dart';
 import '../constants/app_colors.dart';
 import '../data/notifiers.dart';
 
-
-class ProfileView extends StatelessWidget {
-  const ProfileView({super.key});
+class OwnerProfileview extends StatelessWidget {
+  const OwnerProfileview({super.key});
 
   @override
   Widget build(BuildContext context) {

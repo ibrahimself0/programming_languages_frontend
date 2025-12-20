@@ -1,3 +1,4 @@
+import 'package:app/pages/owner_signin_page.dart';
 import 'package:flutter/material.dart';
 import 'signin_page.dart';
 
@@ -56,7 +57,7 @@ class _UserSelectionPageState extends State<UserSelectionPage> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const SignIn()),
+                        MaterialPageRoute(builder: (context) => const OwnerSignIn()),
                       );
                     },
                   ),
