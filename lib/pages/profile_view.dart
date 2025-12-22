@@ -11,6 +11,7 @@ import 'start_page.dart';
 
 
 
+
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
 
