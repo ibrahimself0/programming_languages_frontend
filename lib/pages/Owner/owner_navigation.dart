@@ -1,29 +1,28 @@
+// import 'main_pages.dart';
 import 'package:app/constants/app_colors.dart';
 import 'package:app/data/notifiers.dart';
+import 'package:app/pages/profile_page.dart';
 import 'package:flutter/material.dart';
-import 'profile_view.dart';
 
 
+import 'my_apartment.dart';
 
-import 'bookings_view.dart';
-import 'home_second_view.dart';
-import 'home_view.dart';
-class NavBar extends StatefulWidget {
-  const NavBar({super.key , required this.selectedPage});
-  final int selectedPage;
+
+class OwnerNavBar extends StatefulWidget {
+  const OwnerNavBar({super.key , required this.ownerselectedPage});
+  final int ownerselectedPage;
   @override
-  State<NavBar> createState() => _NavBarState();
+  State<OwnerNavBar> createState() => _OwnerNavBarState();
 }
 
-class _NavBarState extends State<NavBar> {
-  List<Widget> listWidget = [
-    HomeView(),
-    HomeSecondaryView(),
-    HomeTertiaryView(),
-    ProfileView(),
+class _OwnerNavBarState extends State<OwnerNavBar> {
+   List<Widget> listWidget = [
+    // HomeView(),
+    // HomeSecondaryView(),
+    MyApartments(),
+    ProfilePage(),
   ];
-
-  late int selectedIndex = widget.selectedPage;
+   late int ownerselectedIndex = widget.ownerselectedPage;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
   @override
@@ -79,13 +78,13 @@ class _NavBarState extends State<NavBar> {
           ),
           body: Container(
             padding: const EdgeInsets.all(5),
-            child: listWidget.elementAt(selectedIndex),
+            child: listWidget.elementAt(ownerselectedIndex),
           ),
           bottomNavigationBar: BottomNavigationBar(
-            currentIndex: selectedIndex,
+            currentIndex: ownerselectedIndex,
             onTap: (value) {
               setState(() {
-                selectedIndex = value;
+                ownerselectedIndex = value;
               });
             },
             selectedItemColor: AppColors.cyan,
@@ -97,23 +96,15 @@ class _NavBarState extends State<NavBar> {
               BottomNavigationBarItem(
                 backgroundColor: AppColors.cyan,
                 icon: Icon(Icons.home, color: AppColors.cyan),
-                label: "Home",
+                label: "MyApartment",
               ),
               BottomNavigationBarItem(
                 backgroundColor: AppColors.primaryColor,
-                icon: Icon(Icons.email, color: AppColors.cyan),
-                label: "Message",
-              ),
-              BottomNavigationBarItem(
-                backgroundColor: AppColors.primaryColor,
-                icon: Icon(Icons.history, color: AppColors.cyan),
-                label: "Bookings",
-              ),
-              BottomNavigationBarItem(
-                backgroundColor: AppColors.cyan,
                 icon: Icon(Icons.person, color: AppColors.cyan),
                 label: "Profile",
               ),
+              
+             
             ],
           ),
         );

@@ -1,9 +1,9 @@
 
-import 'package:app/pages/start_page.dart';
+import 'package:app/pages/launch/start_page.dart';
 import 'package:app/services/user_service.dart';
 import 'package:flutter/material.dart';
 
-import 'navigation.dart';
+import '../Tenant/tenant_navigation.dart';
 
 class LoadingScreen extends StatefulWidget {
   const LoadingScreen({super.key});
@@ -27,7 +27,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
           context,
           MaterialPageRoute(
             builder: (context) =>
-                NavBar(selectedPage: 0),
+                TenantNavBar(selectedPage: 0),
           ));
     }
 

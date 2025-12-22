@@ -1,10 +1,14 @@
+
+
 import 'package:app/constants/app_colors.dart';
 import 'package:app/models/api_response.dart';
+import 'package:app/pages/Owner/owner_navigation.dart';
+import 'package:app/pages/error_page.dart';
 import 'package:flutter/material.dart';
-import '../services/user_service.dart';
+import '../../services/user_service.dart';
 import 'user_selection_page.dart';
 
-import 'navigation.dart';
+import '../Tenant/tenant_navigation.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -96,10 +100,22 @@ class _LoginState extends State<Login> {
                 onPressed: () async {
                   if (loginstate.currentState!.validate()) {
                     ApiResponse response =await login(number:phoneController.text,password:passwordController.text);
+                    final data = response.data as Map<String, dynamic>;
                     if(response.error == null){
+                      final role = data["role"];
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => const NavBar(selectedPage: 0),
+                          builder: (context) {
+                            if(role == "tenant"){
+                              return TenantNavBar(selectedPage: 0);
+                            }else if(role == "owner"){
+                              return OwnerNavBar(ownerselectedPage: 0);
+                            }
+                            else{
+                              print(role);
+                              return ErrorPage();
+                            }
+                          },
                         ),
                       );
 

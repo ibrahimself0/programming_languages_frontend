@@ -46,7 +46,7 @@ class _UserSelectionPageState extends State<UserSelectionPage> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const SignIn( role: "Tenant",)),
+                        MaterialPageRoute(builder: (context) => const SignIn( role: "tenant",)),
                       );
                     },
                   ),
@@ -58,7 +58,7 @@ class _UserSelectionPageState extends State<UserSelectionPage> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const SignIn(role: "Owner")),
+                        MaterialPageRoute(builder: (context) => const SignIn(role: "owner")),
                       );
                     },
                   ),

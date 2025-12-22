@@ -1,5 +1,5 @@
 
-import 'package:app/pages/loading_screen.dart';
+import 'package:app/pages/launch/loading_screen.dart';
 import 'package:flutter/material.dart';
 
 

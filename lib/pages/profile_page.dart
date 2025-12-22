@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../services/user_service.dart';
-import 'edit_profile_view.dart';
-import 'start_page.dart';
+import 'edit_profile_page.dart';
+import 'launch/start_page.dart';
 
 
 
@@ -13,8 +13,8 @@ import 'start_page.dart';
 
 
 
-class ProfileView extends StatelessWidget {
-  const ProfileView({super.key});
+class ProfilePage extends StatelessWidget {
+  const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {

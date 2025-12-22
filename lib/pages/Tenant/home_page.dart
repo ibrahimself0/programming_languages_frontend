@@ -1,17 +1,17 @@
 import 'package:app/constants/app_colors.dart';
 import 'package:app/data/notifiers.dart';
 import 'package:flutter/material.dart';
-import 'start_page.dart';
 
 
-class HomeView extends StatefulWidget {
-  const HomeView({super.key});
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  State<HomeView> createState() => _HomeViewState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _HomeViewState extends State<HomeView> {
+class _HomePageState extends State<HomePage> {
   String searchQuery = "";
   String? priceFilter;
   String? sizeFilter;
@@ -346,154 +346,4 @@ class ApartmentViewDetails extends StatelessWidget {
   }
 }
 
-// Other Views
-class HomeSecondaryView extends StatefulWidget {
-  const HomeSecondaryView({super.key});
-
-  @override
-  State<HomeSecondaryView> createState() => _HomeSecondaryViewState();
-}
-
-class _HomeSecondaryViewState extends State<HomeSecondaryView> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold();
-  }
-}
-
-class HomeTertiaryView extends StatefulWidget {
-  const HomeTertiaryView({super.key});
-
-  @override
-  State<HomeTertiaryView> createState() => _HomeTertiaryViewState();
-}
-
-class _HomeTertiaryViewState extends State<HomeTertiaryView> {
-  @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: isDarkModeNotifier,
-      builder: (context, value, child) {
-        return DefaultTabController(
-          length: 2,
-          child: Scaffold(
-            // key: scaffoldkey,
-            body: Column(
-              children: [
-                Container(
-                  color: AppColors.primaryColor,
-                  child: TabBar(
-                    // dividerColor: AppColors.cyan,
-                    indicatorColor: AppColors.cyan,
-
-                    tabs: [
-                      Tab(text: "finished"),
-                      Tab(text: "not-finished"),
-                    ],
-                    labelColor: AppColors.cyan,
-                    unselectedLabelColor: AppColors.cyan,
-                  ),
-                ),
-
-                Expanded(
-                  child: TabBarView(
-                    children: [
-                      Center(child: Text("data1")),
-                      Center(child: Text("data2")),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-    // home:
-  }
-}
-
-class ProfileView extends StatelessWidget {
-  const ProfileView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: isDarkModeNotifier,
-      builder: (context, value, child) {
-        return Scaffold(
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Spacer(flex: 1),
-
-              CircleAvatar(
-                radius: 60,
-                backgroundImage: AssetImage("assets/images/err.png"),
-              ),
-              const Text(
-                "Shrek",
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
-              const Spacer(flex: 4),
-
-              TextButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        backgroundColor: AppColors.primaryColor,
-                        title: Text(
-                          "Warning",
-                          style: TextStyle(color: AppColors.cyan),
-                        ),
-                        content: Text(
-                          "Are You Sure?",
-                          style: TextStyle(color: AppColors.cyan),
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pushAndRemoveUntil(
-                                MaterialPageRoute(
-                                  builder: (context) => const StartPage(),
-                                ),
-                                (route) => false,
-                              );
-                            },
-                            child: Text(
-                              "Yes",
-                              style: TextStyle(color: AppColors.cyan),
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Log Out",
-                      style: TextStyle(color: AppColors.cyan, fontSize: 20),
-                    ),
-                    Icon(
-                      Icons.logout_outlined,
-                      color: AppColors.cyan,
-                      size: 20,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
-
-//edit
+//

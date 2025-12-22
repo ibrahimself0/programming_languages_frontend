@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'providers.dart';
+import '../providers.dart';
 
 
 class OwnerAddApartmentScreen extends StatefulWidget {
@@ -55,7 +55,7 @@ class _OwnerAddApartmentScreenState extends State<OwnerAddApartmentScreen> {
 
                 Navigator.pop(context);
               },
-              child: const Text('حفظ'),
+              child: const Text('Save'),
             ),
           ],
         ),

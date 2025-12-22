@@ -1,16 +1,18 @@
-import 'package:app/constants/app_colors.dart';
-import 'package:app/data/notifiers.dart';
 import 'package:flutter/material.dart';
 
+import '../../constants/app_colors.dart';
+import '../../data/notifiers.dart';
 
-class HomeTertiaryView extends StatefulWidget {
-  const HomeTertiaryView({super.key});
+
+
+class MessagesPage extends StatefulWidget {
+  const MessagesPage({super.key});
 
   @override
-  State<HomeTertiaryView> createState() => _HomeTertiaryViewState();
+  State<MessagesPage> createState() => _MessagesPageState();
 }
 
-class _HomeTertiaryViewState extends State<HomeTertiaryView> {
+class _MessagesPageState extends State<MessagesPage> {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
@@ -29,8 +31,8 @@ class _HomeTertiaryViewState extends State<HomeTertiaryView> {
                     indicatorColor: AppColors.cyan,
 
                     tabs: [
-                      Tab(text: "finished"),
-                      Tab(text: "not-finished"),
+                      Tab(text: "chat"),
+                      Tab(text: "notifications"),
                     ],
                     labelColor: AppColors.cyan,
                     unselectedLabelColor: AppColors.cyan,

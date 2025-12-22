@@ -1,27 +1,29 @@
-// import 'main_pages.dart';
 import 'package:app/constants/app_colors.dart';
 import 'package:app/data/notifiers.dart';
 import 'package:flutter/material.dart';
+import '../profile_page.dart';
 
 
-import 'my_apartment.dart';
-import 'owner_profileview.dart';
 
-class OwnerNavBar extends StatefulWidget {
-  const OwnerNavBar({super.key , required this.ownerselectedPage});
-  final int ownerselectedPage;
+import 'bookings_page.dart';
+import 'messages_page.dart' ;
+import 'home_page.dart';
+class TenantNavBar extends StatefulWidget {
+  const TenantNavBar({super.key , required this.selectedPage});
+  final int selectedPage;
   @override
-  State<OwnerNavBar> createState() => _OwnerNavBarState();
+  State<TenantNavBar> createState() => _TenantNavBarState();
 }
 
-class _OwnerNavBarState extends State<OwnerNavBar> {
-   List<Widget> listWidget = [
-    // HomeView(),
-    // HomeSecondaryView(),
-    MyApartments(),
-    OwnerProfileview(),
+class _TenantNavBarState extends State<TenantNavBar> {
+  List<Widget> listWidget = [
+    HomePage(),
+    MessagesPage(),
+    BookingPage(),
+    ProfilePage(),
   ];
-   late int ownerselectedIndex = widget.ownerselectedPage;
+
+  late int selectedIndex = widget.selectedPage;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
   @override
@@ -77,13 +79,13 @@ class _OwnerNavBarState extends State<OwnerNavBar> {
           ),
           body: Container(
             padding: const EdgeInsets.all(5),
-            child: listWidget.elementAt(ownerselectedIndex),
+            child: listWidget.elementAt(selectedIndex),
           ),
           bottomNavigationBar: BottomNavigationBar(
-            currentIndex: ownerselectedIndex,
+            currentIndex: selectedIndex,
             onTap: (value) {
               setState(() {
-                ownerselectedIndex = value;
+                selectedIndex = value;
               });
             },
             selectedItemColor: AppColors.cyan,
@@ -95,15 +97,23 @@ class _OwnerNavBarState extends State<OwnerNavBar> {
               BottomNavigationBarItem(
                 backgroundColor: AppColors.cyan,
                 icon: Icon(Icons.home, color: AppColors.cyan),
-                label: "MyApartment",
+                label: "Home",
               ),
               BottomNavigationBarItem(
                 backgroundColor: AppColors.primaryColor,
+                icon: Icon(Icons.email, color: AppColors.cyan),
+                label: "Message",
+              ),
+              BottomNavigationBarItem(
+                backgroundColor: AppColors.primaryColor,
+                icon: Icon(Icons.history, color: AppColors.cyan),
+                label: "Bookings",
+              ),
+              BottomNavigationBarItem(
+                backgroundColor: AppColors.cyan,
                 icon: Icon(Icons.person, color: AppColors.cyan),
                 label: "Profile",
               ),
-              
-             
             ],
           ),
         );

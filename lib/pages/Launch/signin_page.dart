@@ -1,12 +1,14 @@
 import 'dart:io';
 
 import 'package:app/constants/app_colors.dart';
+import 'package:app/pages/Owner/owner_navigation.dart';
+import 'package:app/pages/error_page.dart';
 import 'package:app/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../models/api_response.dart';
-import 'navigation.dart';
+import '../../models/api_response.dart';
+import '../Tenant/tenant_navigation.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key, required this.role});
@@ -350,7 +352,14 @@ class _SigninPage2State extends State<SigninPage2> {
 
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => const NavBar(selectedPage: 0),
+                          builder: (context) {
+                            if(widget.role == "owner"){
+                              return OwnerNavBar(ownerselectedPage: 0);
+                            }else if(widget.role == "tenant"){
+                              return TenantNavBar(selectedPage: 0);
+                            }
+                            return ErrorPage();
+                          },
                         ),
                       );
                     } else {

@@ -1,6 +1,6 @@
 import 'package:app/constants/app_colors.dart';
 import 'package:flutter/material.dart';
-import 'navigation.dart';
+import 'Tenant/tenant_navigation.dart';
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
 
@@ -94,7 +94,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) {
-                    return NavBar(selectedPage: 3);
+                    return TenantNavBar(selectedPage: 3);
                   }
                 ));
               },

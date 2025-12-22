@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'addapartment.dart';
-import 'providers.dart';
+import 'add_apartment.dart';
+import '../providers.dart';
 
 class MyApartments extends StatefulWidget {
   const MyApartments({super.key});
