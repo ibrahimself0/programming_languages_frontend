@@ -1,6 +1,5 @@
+import 'package:app/constants/app_colors.dart';
 import 'package:flutter/material.dart';
-
-import '../constants/app_colors.dart';
 import 'navigation.dart';
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});

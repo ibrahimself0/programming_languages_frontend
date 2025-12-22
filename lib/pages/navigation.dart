@@ -1,9 +1,10 @@
+import 'package:app/constants/app_colors.dart';
+import 'package:app/data/notifiers.dart';
 import 'package:flutter/material.dart';
 import 'profile_view.dart';
 
 
-import '../constants/app_colors.dart';
-import '../data/notifiers.dart';
+
 import 'bookings_view.dart';
 import 'home_second_view.dart';
 import 'home_view.dart';

@@ -1,18 +1,14 @@
 import 'package:app/constants/app_colors.dart';
 import 'package:app/data/notifiers.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 
 import 'edit_profile_view.dart';
 import 'start_page.dart';
 
 
-
-
-
-
-class ProfileView extends StatelessWidget {
-  const ProfileView({super.key});
+class OwnerProfileview extends StatelessWidget {
+  const OwnerProfileview({super.key});
 
   @override
   Widget build(BuildContext context) {

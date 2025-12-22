@@ -1,7 +1,7 @@
+import 'package:app/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'user_selection_page.dart';
 
-import '../constants/app_colors.dart';
 import 'navigation.dart';
 
 class Login extends StatefulWidget {
@@ -33,6 +33,7 @@ class _LoginState extends State<Login> {
                   if (value!.isEmpty) {
                     return "enter your Number";
                   }
+                  return null;
                 },
                 controller: phoneController,
                 keyboardType: TextInputType.number,
@@ -60,6 +61,7 @@ class _LoginState extends State<Login> {
                   if (value!.isEmpty) {
                     return "enter your Password";
                   }
+                  return null;
                 },
                 controller: passwordController,
                 

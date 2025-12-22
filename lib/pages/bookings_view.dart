@@ -1,7 +1,7 @@
+import 'package:app/constants/app_colors.dart';
+import 'package:app/data/notifiers.dart';
 import 'package:flutter/material.dart';
 
-import '../constants/app_colors.dart';
-import '../data/notifiers.dart';
 
 class HomeTertiaryView extends StatefulWidget {
   const HomeTertiaryView({super.key});

@@ -1,11 +1,11 @@
+import 'package:app/constants/app_colors.dart';
+import 'package:app/data/notifiers.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'login_page.dart';
 
 
-import '../constants/app_colors.dart';
 
-import '../data/notifiers.dart';
 
 class StartPage extends StatefulWidget {
   const StartPage({super.key});
