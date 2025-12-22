@@ -1,5 +1,5 @@
 
-import 'package:app/pages/start_page.dart';
+import 'package:app/pages/loading_screen.dart';
 import 'package:flutter/material.dart';
 
 
@@ -24,8 +24,27 @@ class _AppEntryState extends State<AppEntry> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: StartPage(),
+      home: LoadingScreen(),
       // https://bored-api.appbrewery.com/random
     );
   }
 }
+/*
+*
+      *
+      *
+      *
+      *
+      *
+      *
+      *
+      *
+      *
+      *
+      *
+      *
+      *
+      *
+      *
+      *
+* */

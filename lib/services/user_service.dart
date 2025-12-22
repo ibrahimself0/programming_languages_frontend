@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:app/constants/url.dart';
 import 'package:app/models/api_response.dart';
 import 'package:http/http.dart' as http;
@@ -47,36 +48,54 @@ Future<ApiResponse> login({required String number, required String password}) as
     apiResponse.error = "Server Error";
   }
   return apiResponse;
-}
-
-Future<ApiResponse> register({
+}Future<ApiResponse> register({
   required String phoneNumber,
   required String password,
-  required String confirmPassword,
   required String firstName,
   required String lastName,
   required String dateOfBirth,
   required String role,
+  required File profileImage,
+  required File identityImage,
 }) async {
   ApiResponse apiResponse = ApiResponse();
 
   try {
-    final response = await http.post(
+    final request = http.MultipartRequest(
+      'POST',
       Uri.parse(registerUrl),
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: {
-        "phone_number": phoneNumber,
-        "password": password,
-        "password_confirmation": confirmPassword,
-        "first_name": firstName,
-        "last_name": lastName,
-        "date_of_birth": dateOfBirth,
-        "role": role,
-      },
     );
+
+
+    request.headers.addAll({
+      'Accept': 'application/json',
+    });
+
+
+    request.fields['phone_number'] = phoneNumber;
+    request.fields['password'] = password;
+    request.fields['first_name'] = firstName;
+    request.fields['last_name'] = lastName;
+    request.fields['date_of_birth'] = dateOfBirth;
+    request.fields['role'] = role;
+
+
+    request.files.add(
+      await http.MultipartFile.fromPath(
+        'profile_image_url',
+        profileImage.path,
+      ),
+    );
+
+    request.files.add(
+      await http.MultipartFile.fromPath(
+        'identity_image_url',
+        identityImage.path,
+      ),
+    );
+
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
 
     switch (response.statusCode) {
       case 201:
@@ -87,24 +106,25 @@ Future<ApiResponse> register({
           "token": data['token'],
         };
 
-
         await saveToken(data['token']);
         break;
 
       case 422:
-        apiResponse.error = jsonDecode(response.body)['errors'].toString();
+        apiResponse.error =
+            jsonDecode(response.body)['errors'].toString();
         break;
 
       default:
-        apiResponse.error = "Something Went Wrong";
+        apiResponse.error = "Something went wrong";
         break;
     }
   } catch (e) {
-    apiResponse.error = "Server Error";
+    apiResponse.error = "Server error: ${e.toString()}";
   }
 
   return apiResponse;
 }
+
 Future<bool> logout() async {
   final token = await getToken();
 

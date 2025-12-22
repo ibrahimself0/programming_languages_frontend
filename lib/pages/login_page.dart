@@ -1,5 +1,7 @@
 import 'package:app/constants/app_colors.dart';
+import 'package:app/models/api_response.dart';
 import 'package:flutter/material.dart';
+import '../services/user_service.dart';
 import 'user_selection_page.dart';
 
 import 'navigation.dart';
@@ -91,13 +93,25 @@ class _LoginState extends State<Login> {
               ),
               const SizedBox(height: 20),
               MaterialButton(
-                onPressed: () {
+                onPressed: () async {
                   if (loginstate.currentState!.validate()) {
-                     Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const NavBar(selectedPage: 0),
-                      ),
-                    );
+                    ApiResponse response =await login(number:phoneController.text,password:passwordController.text);
+                    if(response.error == null){
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const NavBar(selectedPage: 0),
+                        ),
+                      );
+
+                    }
+                    else{
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            duration: Duration(seconds: 5),
+                            content: Text(response.error.toString()),
+                            behavior: SnackBarBehavior.floating,
+                          ));
+                    }
                   }
                 },
                 color: AppColors.cyan,

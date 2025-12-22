@@ -1,7 +1,6 @@
 
 import 'package:app/constants/app_colors.dart';
 import 'package:flutter/material.dart';
-import 'owner_signin_page.dart';
 import 'signin_page.dart';
 
 
@@ -47,7 +46,7 @@ class _UserSelectionPageState extends State<UserSelectionPage> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const SignIn()),
+                        MaterialPageRoute(builder: (context) => const SignIn( role: "Tenant",)),
                       );
                     },
                   ),
@@ -59,7 +58,7 @@ class _UserSelectionPageState extends State<UserSelectionPage> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const OwnerSignIn()),
+                        MaterialPageRoute(builder: (context) => const SignIn(role: "Owner")),
                       );
                     },
                   ),

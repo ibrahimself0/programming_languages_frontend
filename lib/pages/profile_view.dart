@@ -3,6 +3,7 @@ import 'package:app/data/notifiers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../services/user_service.dart';
 import 'edit_profile_view.dart';
 import 'start_page.dart';
 
@@ -123,13 +124,23 @@ class ProfileView extends StatelessWidget {
                             ),
                             actions: [
                               TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                    MaterialPageRoute(
-                                      builder: (context) => StartPage(),
-                                    ),
-                                    (route) => false,
-                                  );
+                                onPressed: () async {
+                                  if(await logout()){
+                                    Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                        builder: (context) => StartPage(),
+                                      ),
+                                          (route) => false,
+                                    );
+                                  }else{
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          duration: Duration(seconds: 5),
+                                          content: Text("Some Thin Went Wrong"),
+                                          behavior: SnackBarBehavior.floating,
+                                        ));
+                                  }
+
                                 },
                                 child: Text(
                                   "yes",
