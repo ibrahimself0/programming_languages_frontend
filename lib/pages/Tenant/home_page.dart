@@ -1,8 +1,8 @@
 import 'package:app/constants/app_colors.dart';
 import 'package:app/data/notifiers.dart';
+import 'package:app/models/api_response.dart';
+import 'package:app/services/tenant_service.dart';
 import 'package:flutter/material.dart';
-
-
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,37 +12,55 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  Map<String,String>filters = {
+  "province":  "",
+  "min_price": "",
+  "max_price": "",
+  "min_rooms": "",
+  "max_rooms": "",
+  };
+  late final List<ApiResponse> apiResponse = [];
+  int numberOfApiResponses = 0;
+  // initializing it with an empty list cuz the getter filteredApartments can get called by build() before initApartments()
+  // finishes, so Dart complains that apartments hasn’t been initialized yet
+  late List<Map<String, dynamic>> apartments = [];
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await initApartments();
+    });
+  }
+
+  Future<void> initApartments() async {
+
+    apiResponse.add( await getApartments(await getToken()));
+
+    if (apiResponse[numberOfApiResponses].error != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          duration: Duration(seconds: 5),
+          content: Text(apiResponse[numberOfApiResponses].error.toString()),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    } else {
+
+      setState(() {
+        apartments = (apiResponse[numberOfApiResponses].data as List<dynamic>).map((e) => e as Map<String, dynamic>).toList();
+        isLoadingNotifier.value = false;
+
+      });
+    }
+  }
+
   String searchQuery = "";
   String? priceFilter;
-  String? sizeFilter;
-
-  List<Map<String, dynamic>> apartments = [
-    {
-      "title": "Homs",
-      "price": 400,
-      "size": 80,
-      "location": "Homs",
-      "image": "assets/images/image2.webp",
-    },
-    {
-      "title": "Hama",
-      "price": 1200,
-      "size": 120,
-      "location": "Hama",
-      "image": "assets/images/image2.webp",
-    },
-    {
-      "title": "Aleppo",
-      "price": 1600,
-      "size": 150,
-      "location": "Aleppo",
-      "image": "assets/images/image2.webp",
-    },
-  ];
+  String? roomsFilter;
 
   List<Map<String, dynamic>> get filteredApartments {
     return apartments.where((item) {
-      bool matchesSearch = item["location"].toString().toLowerCase().contains(
+      bool matchesSearch = item["province"].toString().toLowerCase().contains(
         searchQuery.toLowerCase(),
       );
 
@@ -59,23 +77,31 @@ class _HomePageState extends State<HomePage> {
         }
       }
 
-      bool matchesSize = true;
-      if (sizeFilter != null) {
-        if (sizeFilter == "0-100") {
-          matchesSize = item["size"] <= 100;
-        } else if (sizeFilter == "100-150") {
-          matchesSize = item["size"] >= 100 && item["size"] <= 150;
-        } else if (sizeFilter == "150+") {
-          matchesSize = item["size"] > 150;
+      bool matchesRooms = true;
+      if (roomsFilter != null) {
+        if (roomsFilter == "1") {
+          matchesRooms = item["rooms"] <= 1;
+        } else if (roomsFilter == "2") {
+          matchesRooms = item["1"] >= 1 && item["2"] <= 2;
+        } else if (roomsFilter == "150+") {
+          matchesRooms = item["3"] >= 3;
         }
       }
 
-      return matchesSearch && matchesPrice && matchesSize;
+      return matchesSearch && matchesPrice && matchesRooms;
     }).toList();
   }
 
   @override
   Widget build(BuildContext context) {
+    if(isLoadingNotifier.value){
+      return ValueListenableBuilder(
+        valueListenable: isLoadingNotifier,
+        builder: (context, value, child) {
+          return Center(child: CircularProgressIndicator(color: AppColors.cyan));
+        }
+      );
+    }
     return ValueListenableBuilder(
       valueListenable: isDarkModeNotifier,
       builder: (context, value, child) {
@@ -144,41 +170,41 @@ class _HomePageState extends State<HomePage> {
                       icon: Icon(Icons.square_foot, color: AppColors.cyan),
                       onSelected: (value) {
                         setState(() {
-                          sizeFilter = value;
+                          roomsFilter = value;
                         });
                       },
                       itemBuilder: (_) => [
                         const PopupMenuItem(
-                          value: "0-100",
-                          child: Text("0-100"),
+                          value: "1",
+                          child: Text("1"),
                         ),
                         const PopupMenuItem(
-                          value: "100-150",
-                          child: Text("100-150"),
+                          value: "2",
+                          child: Text("2"),
                         ),
                         const PopupMenuItem(
-                          value: "150+",
-                          child: Text("More than 150"),
+                          value: "3+",
+                          child: Text("3+"),
                         ),
                       ],
                     ),
 
-                    PopupMenuButton<String>(
-                      icon: Icon(Icons.more_vert, color: AppColors.cyan),
-                      onSelected: (value) {},
-                      itemBuilder: (_) => [
-                        const PopupMenuItem(value: "a", child: Text("1")),
-                        const PopupMenuItem(value: "b", child: Text("2")),
-                      ],
-                    ),
 
                     IconButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        isLoadingNotifier.value = true;
+                        final newResponse = await getApartments(await getToken());
+                        apiResponse.add(newResponse);
+                        final newApartments = (newResponse.data as List<dynamic>)
+                            .map((e) => e as Map<String, dynamic>)
+                            .toList();
+
                         setState(() {
-                          searchQuery = "";
-                          priceFilter = null;
-                          sizeFilter = null;
+                          numberOfApiResponses++;
+                          apartments = newApartments;
+                          isLoadingNotifier.value = false;
                         });
+                        print(numberOfApiResponses);
                       },
                       icon: Icon(Icons.refresh, color: AppColors.cyan),
                     ),
@@ -205,16 +231,16 @@ class _HomePageState extends State<HomePage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Image.asset(
+                          /*Image.asset(
                             apt["image"],
                             width: double.infinity,
                             height: 120,
                             fit: BoxFit.cover,
                             cacheWidth: 300,
-                          ),
+                          ),*/
                           const SizedBox(height: 8),
                           Text(
-                            "${apt["location"]}",
+                            "${apt["province"]}",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: AppColors.cyan,
@@ -225,7 +251,7 @@ class _HomePageState extends State<HomePage> {
                             style: TextStyle(color: AppColors.cyan),
                           ),
                           Text(
-                            "Space: ${apt["size"]}",
+                            "Space: ${apt["rooms"]}",
                             style: TextStyle(color: AppColors.cyan),
                           ),
                           Row(

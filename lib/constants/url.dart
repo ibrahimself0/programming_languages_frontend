@@ -12,8 +12,11 @@ const String logoutUrl = "$baseUrl/logout";
 const String profileUrl = "$baseUrl/profile";
 
 // Apartments (Owner)
-const String apartmentsUrl = "$baseUrl/apartments";
+const String apartmentsUrl = "$baseUrl/getApartments";
 const String apartmentByIdUrl = "$baseUrl/apartments/{id}";
+
+// Apartments (Tenant)
+const String filterApartmentsUrl = "$baseUrl/filter";
 
 // Apartment Images (Owner)
 const String apartmentImagesByIdUrl = "$baseUrl/apartmentsImages/{id}";
@@ -41,5 +44,3 @@ const String adminUsersRoleUrl = "$baseUrl/admin/users/role/{id}";
 const String adminUsersDeleteUrl = "$baseUrl/admin/users/delete/{id}";
 const String adminUsersVerifyUrl = "$baseUrl/admin/users/verify/{id}";
 const String adminUsersUnverifiedUrl = "$baseUrl/admin/users/unverified";
-const String somethingWentWrong = 'SomeThing Went Wrong';
-const String serverError = 'server Error';

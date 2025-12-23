@@ -1,6 +1,6 @@
 
 import 'package:app/pages/launch/start_page.dart';
-import 'package:app/services/user_service.dart';
+import 'package:app/services/tenant_service.dart';
 import 'package:flutter/material.dart';
 
 import '../Tenant/tenant_navigation.dart';

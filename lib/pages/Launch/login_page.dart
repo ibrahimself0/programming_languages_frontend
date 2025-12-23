@@ -5,7 +5,7 @@ import 'package:app/models/api_response.dart';
 import 'package:app/pages/Owner/owner_navigation.dart';
 import 'package:app/pages/error_page.dart';
 import 'package:flutter/material.dart';
-import '../../services/user_service.dart';
+import '../../services/tenant_service.dart';
 import 'user_selection_page.dart';
 
 import '../Tenant/tenant_navigation.dart';

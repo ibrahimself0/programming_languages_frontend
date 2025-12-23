@@ -3,7 +3,7 @@ import 'package:app/data/notifiers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../services/user_service.dart';
+import '../services/tenant_service.dart';
 import 'edit_profile_page.dart';
 import 'launch/start_page.dart';
 

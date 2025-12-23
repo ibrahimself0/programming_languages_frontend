@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:app/constants/app_colors.dart';
 import 'package:app/pages/Owner/owner_navigation.dart';
 import 'package:app/pages/error_page.dart';
-import 'package:app/services/user_service.dart';
+import 'package:app/services/tenant_service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
