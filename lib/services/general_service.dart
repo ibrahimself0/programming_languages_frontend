@@ -147,37 +147,4 @@ Future<String?> getRole() async {
   return prefs.getString('user_role');
 }
 
-Future<ApiResponse> getApartments(String token) async {
-  ApiResponse apiResponse = ApiResponse();
-  try {
-    final response = await http.get(
-      Uri.parse(filterApartmentsUrl),
-      headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'},
-    );
-    switch (response.statusCode) {
-      case 200:
-        final data = jsonDecode(response.body);
-        apiResponse.data = data
-            .map(
-              (apartment) => {
-            "id": apartment['id'],
-            "owner_id": apartment['owner_id'],
-            "city": apartment['city'],
-            "province": apartment['province'],
-            "description": apartment['description'],
-            "rooms": apartment['rooms'],
-            "price": apartment['price'],
-            "created_at": apartment['created_at'],
-            "updated_at": apartment['updated_at'],
-          },
-        )
-            .toList();
-        break;
-      default:
-        apiResponse.error = somethingWentWrong;
-    }
-  } catch (e) {
-    apiResponse.error = "$serverError : ${e.toString()}";
-  }
-  return apiResponse;
-}
+

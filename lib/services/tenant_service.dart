@@ -3,19 +3,23 @@ import 'package:app/constants/url.dart';
 import 'package:app/models/api_response.dart';
 import 'package:http/http.dart' as http;
 
+import '../constants/errors.dart';
+
 
 
 Future<ApiResponse> getApartmentsFiltered(
-    String token, {
-      Map<String, String>? filters,
-    }) async {
+    String token,
+      Map<String, dynamic>? filters,
+    ) async {
   ApiResponse apiResponse = ApiResponse();
 
   try {
     // Build URL with query parameters if filters exist
     Uri uri = Uri.parse(filterApartmentsUrl);
     if (filters != null && filters.isNotEmpty) {
-      uri = uri.replace(queryParameters: filters);
+      uri = uri.replace(
+        queryParameters: filters.map((key, value) => MapEntry(key, value.toString())),
+      );
     }
 
     final response = await http.get(
@@ -52,5 +56,39 @@ Future<ApiResponse> getApartmentsFiltered(
     apiResponse.error = "Server error: ${e.toString()}";
   }
 
+  return apiResponse;
+}
+Future<ApiResponse> getApartments(String token) async {
+  ApiResponse apiResponse = ApiResponse();
+  try {
+    final response = await http.get(
+      Uri.parse(filterApartmentsUrl),
+      headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'},
+    );
+    switch (response.statusCode) {
+      case 200:
+        final data = jsonDecode(response.body);
+        apiResponse.data = data
+            .map(
+              (apartment) => {
+            "id": apartment['id'],
+            "owner_id": apartment['owner_id'],
+            "city": apartment['city'],
+            "province": apartment['province'],
+            "description": apartment['description'],
+            "rooms": apartment['rooms'],
+            "price": apartment['price'],
+            "created_at": apartment['created_at'],
+            "updated_at": apartment['updated_at'],
+          },
+        )
+            .toList();
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+    }
+  } catch (e) {
+    apiResponse.error = "$serverError : ${e.toString()}";
+  }
   return apiResponse;
 }
