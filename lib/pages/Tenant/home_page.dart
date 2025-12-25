@@ -1,8 +1,9 @@
 import 'package:app/constants/app_colors.dart';
 import 'package:app/data/notifiers.dart';
 import 'package:app/models/api_response.dart';
-import 'package:app/services/tenant_service.dart';
 import 'package:flutter/material.dart';
+
+import '../../services/general_service.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

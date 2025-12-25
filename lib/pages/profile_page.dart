@@ -1,9 +1,8 @@
 import 'package:app/constants/app_colors.dart';
 import 'package:app/data/notifiers.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../services/tenant_service.dart';
+import '../services/general_service.dart';
 import 'edit_profile_page.dart';
 import 'launch/start_page.dart';
 
@@ -14,8 +13,10 @@ import 'launch/start_page.dart';
 
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+  void initState() {
 
+  }
+  const ProfilePage({super.key});
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
@@ -105,7 +106,7 @@ class ProfilePage extends StatelessWidget {
                   },
                 ),
                 Spacer(),
-                Container(
+                SizedBox(
                   width: double.infinity,
                   child: TextButton(
                     onPressed: () {

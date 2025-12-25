@@ -9,8 +9,8 @@ import 'my_apartment.dart';
 
 
 class OwnerNavBar extends StatefulWidget {
-  const OwnerNavBar({super.key , required this.ownerselectedPage});
-  final int ownerselectedPage;
+  const OwnerNavBar({super.key , required this.ownerSelectedPage});
+  final int ownerSelectedPage;
   @override
   State<OwnerNavBar> createState() => _OwnerNavBarState();
 }
@@ -22,7 +22,7 @@ class _OwnerNavBarState extends State<OwnerNavBar> {
     MyApartments(),
     ProfilePage(),
   ];
-   late int ownerselectedIndex = widget.ownerselectedPage;
+   late int ownersSelectedIndex = widget.ownerSelectedPage;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
   @override
@@ -78,13 +78,13 @@ class _OwnerNavBarState extends State<OwnerNavBar> {
           ),
           body: Container(
             padding: const EdgeInsets.all(5),
-            child: listWidget.elementAt(ownerselectedIndex),
+            child: listWidget.elementAt(ownersSelectedIndex),
           ),
           bottomNavigationBar: BottomNavigationBar(
-            currentIndex: ownerselectedIndex,
+            currentIndex: ownersSelectedIndex,
             onTap: (value) {
               setState(() {
-                ownerselectedIndex = value;
+                ownersSelectedIndex = value;
               });
             },
             selectedItemColor: AppColors.cyan,

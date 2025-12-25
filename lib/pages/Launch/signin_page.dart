@@ -3,11 +3,11 @@ import 'dart:io';
 import 'package:app/constants/app_colors.dart';
 import 'package:app/pages/Owner/owner_navigation.dart';
 import 'package:app/pages/error_page.dart';
-import 'package:app/services/tenant_service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../models/api_response.dart';
+import '../../services/general_service.dart';
 import '../Tenant/tenant_navigation.dart';
 
 class SignIn extends StatefulWidget {
@@ -26,7 +26,7 @@ final TextEditingController passwordController = TextEditingController();
 File? profileImage;
 File? identityImage;
 
-GlobalKey<FormState> Signtate = GlobalKey();
+GlobalKey<FormState> signState = GlobalKey();
 
 class _SignInState extends State<SignIn> {
   Future<void> pickProfileImage() async {
@@ -78,7 +78,7 @@ class _SignInState extends State<SignIn> {
         padding: const EdgeInsets.all(10),
         color: AppColors.primaryColor,
         child: Form(
-          key: Signtate,
+          key: signState,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -215,7 +215,7 @@ class _SignInState extends State<SignIn> {
               const SizedBox(height: 10),
               MaterialButton(
                 onPressed: () async {
-                  if (Signtate.currentState!.validate() && profileImage != null && identityImage !=null ) {
+                  if (signState.currentState!.validate() && profileImage != null && identityImage !=null ) {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => SigninPage2(role: widget.role),
@@ -333,9 +333,8 @@ class _SigninPage2State extends State<SigninPage2> {
               ),
               MaterialButton(
                 onPressed: () async {
-                  print("CONFIRM PRESSED 1 ");
 
-                  if (Signtate.currentState!.validate()) {
+                  if (signState.currentState!.validate()) {
                     ApiResponse response = await register(
                       phoneNumber: phoneNumberController.text,
                       firstName: firstNameController.text,
@@ -348,13 +347,11 @@ class _SigninPage2State extends State<SigninPage2> {
 
                     );
                     if (response.error == null) {
-                      print("CONFIRM PRESSED 2 ");
-
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) {
                             if(widget.role == "owner"){
-                              return OwnerNavBar(ownerselectedPage: 0);
+                              return OwnerNavBar(ownerSelectedPage: 0);
                             }else if(widget.role == "tenant"){
                               return TenantNavBar(selectedPage: 0);
                             }
@@ -363,7 +360,6 @@ class _SigninPage2State extends State<SigninPage2> {
                         ),
                       );
                     } else {
-                      print("CONFIRM PRESSED 3");
 
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(

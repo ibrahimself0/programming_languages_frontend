@@ -5,7 +5,7 @@ import 'package:app/models/api_response.dart';
 import 'package:app/pages/Owner/owner_navigation.dart';
 import 'package:app/pages/error_page.dart';
 import 'package:flutter/material.dart';
-import '../../services/tenant_service.dart';
+import '../../services/general_service.dart';
 import 'user_selection_page.dart';
 
 import '../Tenant/tenant_navigation.dart';
@@ -18,7 +18,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-   bool passwordhidden=true;
+   bool passwordHidden=true;
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   GlobalKey<FormState> loginstate = GlobalKey();
@@ -71,7 +71,7 @@ class _LoginState extends State<Login> {
                 },
                 controller: passwordController,
                 
-                obscureText: passwordhidden,
+                obscureText: passwordHidden,
                 style: TextStyle(color: AppColors.cyan),
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.lock, color: AppColors.cyan),
@@ -84,9 +84,9 @@ class _LoginState extends State<Login> {
                   ),
                   suffixIcon: IconButton(onPressed:() {
                     setState(() {
-                      passwordhidden=!passwordhidden;
+                      passwordHidden=!passwordHidden;
                     });
-                  }, icon: Icon(color: AppColors.cyan,passwordhidden?Icons.visibility_off_sharp:Icons.visibility_sharp)),
+                  }, icon: Icon(color: AppColors.cyan,passwordHidden?Icons.visibility_off_sharp:Icons.visibility_sharp)),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: AppColors.cyan, width: 2),
                     borderRadius: BorderRadius.circular(15),
@@ -109,10 +109,9 @@ class _LoginState extends State<Login> {
                             if(role == "tenant"){
                               return TenantNavBar(selectedPage: 0);
                             }else if(role == "owner"){
-                              return OwnerNavBar(ownerselectedPage: 0);
+                              return OwnerNavBar(ownerSelectedPage: 0);
                             }
                             else{
-                              print(role);
                               return ErrorPage();
                             }
                           },

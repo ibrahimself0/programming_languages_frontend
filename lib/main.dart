@@ -1,11 +1,19 @@
 
 import 'package:app/pages/launch/loading_screen.dart';
+import 'package:app/pages/providers.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 
 void main() {
-  runApp(const AppEntry());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => ApartmentProvider(),
+      child: AppEntry(),
+    ),
+  );
 }
+
 
 class AppEntry extends StatefulWidget {
   const AppEntry({super.key});
@@ -25,7 +33,6 @@ class _AppEntryState extends State<AppEntry> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: LoadingScreen(),
-      // https://bored-api.appbrewery.com/random
     );
   }
 }
