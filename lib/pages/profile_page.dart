@@ -1,6 +1,8 @@
 import 'package:app/constants/app_colors.dart';
 import 'package:app/data/notifiers.dart';
+import 'package:app/pages/providers.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../services/general_service.dart';
 import 'edit_profile_page.dart';
@@ -127,6 +129,7 @@ class ProfilePage extends StatelessWidget {
                               TextButton(
                                 onPressed: () async {
                                   if(await logout()){
+                                     Provider.of<ApartmentProvider>((context), listen: false).clear();
                                     Navigator.of(context).pushAndRemoveUntil(
                                       MaterialPageRoute(
                                         builder: (context) => StartPage(),

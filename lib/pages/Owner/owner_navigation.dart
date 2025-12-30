@@ -2,7 +2,9 @@
 import 'package:app/constants/app_colors.dart';
 import 'package:app/data/notifiers.dart';
 import 'package:app/pages/profile_page.dart';
+import 'package:app/pages/providers.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 
 import 'my_apartment.dart';
@@ -16,10 +18,12 @@ class OwnerNavBar extends StatefulWidget {
 }
 
 class _OwnerNavBarState extends State<OwnerNavBar> {
+ 
    List<Widget> listWidget = [
     // HomeView(),
     // HomeSecondaryView(),
     MyApartments(),
+    
     ProfilePage(),
   ];
    late int ownersSelectedIndex = widget.ownerSelectedPage;

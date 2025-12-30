@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:app/pages/providers.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants/errors.dart';
@@ -131,6 +133,8 @@ Future<bool> logout() async {
   if (response.statusCode == 200) {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('token');
+   
+
     return true;
   } else {
     return false;

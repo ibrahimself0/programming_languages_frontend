@@ -1,10 +1,10 @@
-
-
 import 'package:app/constants/app_colors.dart';
 import 'package:app/models/api_response.dart';
 import 'package:app/pages/Owner/owner_navigation.dart';
 import 'package:app/pages/error_page.dart';
+import 'package:app/pages/providers.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../services/general_service.dart';
 import 'user_selection_page.dart';
 
@@ -18,7 +18,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-   bool passwordHidden=true;
+  bool passwordHidden = true;
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   GlobalKey<FormState> loginstate = GlobalKey();
@@ -30,12 +30,12 @@ class _LoginState extends State<Login> {
         color: Colors.white,
         padding: const EdgeInsets.all(10),
         child: Form(
-          key:loginstate ,
+          key: loginstate,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextFormField(
-                 validator: (value) {
+                validator: (value) {
                   if (value!.isEmpty) {
                     return "enter your Number";
                   }
@@ -62,15 +62,14 @@ class _LoginState extends State<Login> {
               ),
               const SizedBox(height: 15),
               TextFormField(
-
-                 validator: (value) {
+                validator: (value) {
                   if (value!.isEmpty) {
                     return "enter your Password";
                   }
                   return null;
                 },
                 controller: passwordController,
-                
+
                 obscureText: passwordHidden,
                 style: TextStyle(color: AppColors.cyan),
                 decoration: InputDecoration(
@@ -78,15 +77,22 @@ class _LoginState extends State<Login> {
                   filled: true,
                   fillColor: Colors.white,
                   enabledBorder: OutlineInputBorder(
-
                     borderSide: BorderSide(color: AppColors.cyan),
                     borderRadius: BorderRadius.circular(15),
                   ),
-                  suffixIcon: IconButton(onPressed:() {
-                    setState(() {
-                      passwordHidden=!passwordHidden;
-                    });
-                  }, icon: Icon(color: AppColors.cyan,passwordHidden?Icons.visibility_off_sharp:Icons.visibility_sharp)),
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        passwordHidden = !passwordHidden;
+                      });
+                    },
+                    icon: Icon(
+                      color: AppColors.cyan,
+                      passwordHidden
+                          ? Icons.visibility_off_sharp
+                          : Icons.visibility_sharp,
+                    ),
+                  ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: AppColors.cyan, width: 2),
                     borderRadius: BorderRadius.circular(15),
@@ -99,33 +105,42 @@ class _LoginState extends State<Login> {
               MaterialButton(
                 onPressed: () async {
                   if (loginstate.currentState!.validate()) {
-                    ApiResponse response =await login(number:phoneController.text,password:passwordController.text);
-                    final data = response.data as Map<String, dynamic>;
-                    if(response.error == null){
+                    ApiResponse response = await login(
+                      number: phoneController.text,
+                      password: passwordController.text,
+                    );
+
+                    final data;
+                    if (response.data != null) {
+                      data = response.data as Map<String, dynamic>;
+                    } else {
+                      data = null;
+                    }
+                    if (response.error == null) {
                       final role = data["role"];
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) {
-                            if(role == "tenant"){
+                          builder: (context)  {
+                            if (role == "tenant") {
                               return TenantNavBar(selectedPage: 0);
-                            }else if(role == "owner"){
+                            } else if (role == "owner") {
+                          
+
                               return OwnerNavBar(ownerSelectedPage: 0);
-                            }
-                            else{
+                            } else {
                               return ErrorPage();
                             }
                           },
                         ),
                       );
-
-                    }
-                    else{
+                    } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            duration: Duration(seconds: 5),
-                            content: Text(response.error.toString()),
-                            behavior: SnackBarBehavior.floating,
-                          ));
+                        SnackBar(
+                          duration: Duration(seconds: 5),
+                          content: Text(response.error.toString()),
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
                     }
                   }
                 },

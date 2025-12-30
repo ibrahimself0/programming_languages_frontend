@@ -1,6 +1,6 @@
 
 // Base URL
-const String baseUrl = "http://192.168.1.3:8000/api";
+const String baseUrl = "http://192.168.137.36:8000/api";
 
 // Auth
 const String userUrl = "$baseUrl/user";
@@ -12,7 +12,7 @@ const String logoutUrl = "$baseUrl/logout";
 const String profileUrl = "$baseUrl/profile";
 
 // Apartments (Owner)
-const String apartmentsUrl = "$baseUrl/getApartments";
+const String apartmentsUrl = "$baseUrl/apartments";
 const String apartmentByIdUrl = "$baseUrl/apartments/{id}";
 
 // Apartments (Tenant)
