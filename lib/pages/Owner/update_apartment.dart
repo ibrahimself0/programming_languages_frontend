@@ -19,7 +19,7 @@ class _EditApartmentScreenState extends State<EditApartmentScreen> {
   
   Future<void> updateApartment(int id) async {
   final token = await getToken();
-  final url = Uri.parse("http://192.168.137.36:8000/api/owner/apartments/$id");
+  final url = Uri.parse("http://192.168.137.231:8000/api/owner/apartments/$id");
 
   final response = await http.put(
     url,

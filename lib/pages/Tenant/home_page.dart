@@ -2,6 +2,7 @@ import 'package:app/constants/app_colors.dart';
 import 'package:app/data/notifiers.dart';
 import 'package:app/models/api_response.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 import '../../services/general_service.dart';
 import '../../services/tenant_service.dart';
@@ -32,9 +33,7 @@ class _HomePageState extends State<HomePage> {
     if (filters!.isEmpty) {
       apiResponse.add(await getApartments(await getToken()));
     } else {
-      apiResponse.add(
-        await getApartmentsFiltered(await getToken(), filters),
-      );
+      apiResponse.add(await getApartmentsFiltered(await getToken(), filters));
     }
 
     if (apiResponse[numberOfApiResponses].error != null) {
@@ -380,6 +379,8 @@ class _HomePageState extends State<HomePage> {
                           ),
                       itemBuilder: (context, index) {
                         final apartment = apartmentsNotifier.value[index];
+                        final apt = apartmentsNotifier.value[index];
+
                         return Card(
                           color: AppColors.primaryColor,
                           elevation: 3,
@@ -416,11 +417,14 @@ class _HomePageState extends State<HomePage> {
                                   IconButton(
                                     iconSize: 18,
                                     onPressed: () {
+                                      print(apt);
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              ApartmentViewDetails(),
+                                              ApartmentViewDetails(
+                                                specapartment: apt,
+                                              ),
                                         ),
                                       );
                                     },
@@ -448,7 +452,26 @@ class _HomePageState extends State<HomePage> {
 }
 
 class ApartmentViewDetails extends StatelessWidget {
-  const ApartmentViewDetails({super.key});
+  final Map<String, dynamic> specapartment;
+  const ApartmentViewDetails({super.key, required this.specapartment});
+  Future<void> addToFavorites(BuildContext context, int apartmentId) async {
+    final token = await getToken();
+
+    final response = await http.post(
+      Uri.parse("http://192.168.137.231:8000/api/favorites/$apartmentId"),
+      headers: {"Authorization": "Bearer $token", "Accept": "application/json"},
+    );
+
+    if (response.statusCode == 201) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Added to favorites")));
+    } else {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Error: ${response.body}")));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -491,9 +514,12 @@ class ApartmentViewDetails extends StatelessWidget {
                 Expanded(
                   child: MaterialButton(
                     color: AppColors.cyan,
-                    onPressed: () {},
+                    onPressed: () async {
+                      await addToFavorites(context,specapartment['id'],);
+                    },
+
                     child: Text(
-                      "Rental Request",
+                      "add to Favorite",
                       style: TextStyle(color: AppColors.primaryColor),
                     ),
                   ),
@@ -512,13 +538,23 @@ class ApartmentViewDetails extends StatelessWidget {
                   childAspectRatio: 3,
                 ),
                 children: [
-                  Text("price :", style: TextStyle(color: AppColors.cyan)),
                   Text(
-                    "Description :",
+                    "province : ${specapartment['province']}",
                     style: TextStyle(color: AppColors.cyan),
                   ),
-                  Text("Location :", style: TextStyle(color: AppColors.cyan)),
-                  Text("Space :", style: TextStyle(color: AppColors.cyan)),
+                  Text(
+                    "price : ${specapartment['price']}",
+                    style: TextStyle(color: AppColors.cyan),
+                  ),
+                  Text(
+                    "Description : ${specapartment['description']}",
+                    style: TextStyle(color: AppColors.cyan),
+                  ),
+
+                  Text(
+                    "Number of Rooms : ${specapartment['rooms']}",
+                    style: TextStyle(color: AppColors.cyan),
+                  ),
                 ],
               ),
             ),
@@ -529,5 +565,3 @@ class ApartmentViewDetails extends StatelessWidget {
     );
   }
 }
-
-//

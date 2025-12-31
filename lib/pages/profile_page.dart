@@ -1,5 +1,6 @@
 import 'package:app/constants/app_colors.dart';
 import 'package:app/data/notifiers.dart';
+import 'package:app/pages/Tenant/favorite_page.dart';
 import 'package:app/pages/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -102,7 +103,7 @@ class ProfilePage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const EditProfilePage(),
+                        builder: (context) => const FavoritePage(),
                       ),
                     );
                   },

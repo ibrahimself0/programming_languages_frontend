@@ -68,7 +68,7 @@ void clear() {
   }
   Future<void> fetchMyApartments() async {
   final token = await getToken();
-  final url = Uri.parse("http://192.168.137.36:8000/api/owner/apartments");
+  final url = Uri.parse("http://192.168.137.231:8000/api/owner/apartments");
 
   final response = await http.get(
     url,
@@ -79,8 +79,10 @@ void clear() {
   );
 
   if (response.statusCode == 200) {
+    
     final List data = jsonDecode(response.body);
     myApartments = data.map((e) => Apartment.fromJson(e)).toList();
+    
     notifyListeners();
   }
 }

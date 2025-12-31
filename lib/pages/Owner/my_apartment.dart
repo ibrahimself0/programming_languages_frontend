@@ -20,16 +20,16 @@ class MyApartments extends StatefulWidget {
 }
 
 class _MyApartmentsState extends State<MyApartments> {
+  // @override
   @override
-  @override
-// void initState() {
-//   super.initState();
+void initState() {
+  super.initState();
 
-//   Future.microtask(() {
-//     Provider.of<ApartmentProvider>(context, listen: false)
-//         .fetchMyApartments();
-//   });
-// }
+  Future.microtask(() {
+    Provider.of<ApartmentProvider>(context, listen: false)
+        .fetchMyApartments();
+  });
+}
   
   // Future<void> delete1Apartment(int id) async {
   //   final token = await getToken();
@@ -79,7 +79,7 @@ class _MyApartmentsState extends State<MyApartments> {
                   itemCount: myApartments.length,
                   itemBuilder: (context, index) {
                     final apt = myApartments[index];
-                    return Container(
+                    return Padding(  padding: const EdgeInsets.symmetric(vertical: 5),child: Container(
                       padding: EdgeInsets.all(5),
                       decoration: BoxDecoration(color: AppColors.cyan,borderRadius: BorderRadius.circular(20)),
                       width: double.infinity,
@@ -157,8 +157,12 @@ class _MyApartmentsState extends State<MyApartments> {
                                 ],)
                         ],
                       ),
-                    );
+                      
+                    ));
+
+                  
                   },
+                  
                 ),
 
           floatingActionButton: FloatingActionButton(
@@ -178,7 +182,7 @@ class _MyApartmentsState extends State<MyApartments> {
   void deleteApartment(BuildContext context, int id) async {
     final token = await getToken();
     final url = Uri.parse(
-      "http://192.168.137.223:8000/api/owner/apartments/$id",
+      "http://192.168.137.231:8000/api/owner/apartments/$id",
     );
 
     final response = await http.delete(
