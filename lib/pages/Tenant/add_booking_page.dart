@@ -7,13 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 class addBookingPage extends StatefulWidget {
   final Map<String, dynamic> apartment;
-
   const addBookingPage({super.key, required this.apartment});
-
   @override
   _addBookingPageState createState() => _addBookingPageState();
 }
-
 class _addBookingPageState extends State<addBookingPage> {
   Future<void> pickDateOfend(BuildContext context) async {
     if (_startDateController.text.isEmpty) {
@@ -24,14 +21,31 @@ class _addBookingPageState extends State<addBookingPage> {
     return;
   }
   final DateTime startDate = DateTime.parse(_startDateController.text);
-
     DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: startDate,
       firstDate:startDate,
       lastDate:  DateTime(2027),
+       builder: (BuildContext context, Widget? child) {
+      return Theme(
+        data: ThemeData.light().copyWith(
+          primaryColor: AppColors.cyan, 
+          colorScheme: ColorScheme.light(
+            primary: AppColors.cyan,     
+            onPrimary: AppColors.darkCyan,    
+            onSurface: AppColors.darkCyan,         
+          ),
+         dialogTheme: DialogThemeData(
+          backgroundColor:AppColors.cyan, 
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16), 
+          ),
+        ),
+        ),
+        child: child!,
+      );
+    },
     );
-
     if (pickedDate != null) {
       setState(() {
         _endDateController.text =
@@ -39,7 +53,7 @@ class _addBookingPageState extends State<addBookingPage> {
       });
     }
   }
-   Future<void> pickDateOfstart(BuildContext context) async {
+  Future<void> pickDateOfstart(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate:  DateTime.now(),
@@ -77,12 +91,9 @@ class _addBookingPageState extends State<addBookingPage> {
       });
     }
   }
-
-
   final _startDateController = TextEditingController();
   final _endDateController = TextEditingController();
   bool isLoading = false;
-
   Future<void> _bookApartment() async {
     final token = await getToken(); 
     setState(() => isLoading = true);
@@ -93,7 +104,6 @@ class _addBookingPageState extends State<addBookingPage> {
         _startDateController.text,
         _endDateController.text,
       );
-
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Done")),
       );
@@ -101,8 +111,7 @@ class _addBookingPageState extends State<addBookingPage> {
     }catch (e) {
       print(e);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("error: $e")),
-        
+        SnackBar(content: Text("error: $e")),  
       );
     } finally {
       setState(() => isLoading = false);
@@ -111,7 +120,7 @@ class _addBookingPageState extends State<addBookingPage> {
    Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primaryColor,
-      appBar: AppBar(backgroundColor: AppColors.primaryColor,centerTitle: true ,title: Text("${widget.apartment['province']} Aparment",style: TextStyle(color: AppColors.cyan))),
+      appBar: AppBar(foregroundColor: AppColors.cyan,backgroundColor: AppColors.primaryColor,centerTitle: true ,title: Text("${widget.apartment['province']} Aparment",style: TextStyle(color: AppColors.cyan))),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -162,6 +171,7 @@ class _addBookingPageState extends State<addBookingPage> {
             isLoading
                 ? CircularProgressIndicator()
                 : ElevatedButton(
+                   style: ElevatedButton.styleFrom(backgroundColor: AppColors.cyan,foregroundColor: AppColors.primaryColor),
                     onPressed: _bookApartment,
                     child: Text("Confrim booking"),
                   ),

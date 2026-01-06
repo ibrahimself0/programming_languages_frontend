@@ -385,6 +385,10 @@ class _HomePageState extends State<HomePage> {
                         final apt = apartmentsNotifier.value[index];
 
                         return Card(
+                          shape: RoundedRectangleBorder(
+                            side: BorderSide(width: 2.0,color: AppColors.cyan),
+                            borderRadius: BorderRadiusGeometry.circular(10)
+                          ),
                           color: AppColors.primaryColor,
                           elevation: 3,
                           child: Column(

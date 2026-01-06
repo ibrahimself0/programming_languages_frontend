@@ -33,11 +33,12 @@ class _FavoritePageState extends State<FavoritePage> {
   );
 
   if (response.statusCode == 200) {
-    final data = jsonDecode(response.body);
-    return data['favorites'];
-  } else {
-    throw Exception("failed to load favorite apatment");
-  }
+  final data = jsonDecode(response.body);
+  return data['favorites'] ?? [];
+}
+
+return [];
+
 }
 
 
@@ -62,7 +63,7 @@ class _FavoritePageState extends State<FavoritePage> {
     return Scaffold(
       backgroundColor: AppColors.primaryColor,
 
-      appBar: AppBar(centerTitle: true, backgroundColor: AppColors.primaryColor,title: Text("Favorrite",style: TextStyle(color: AppColors.cyan),)),
+      appBar: AppBar(foregroundColor: AppColors.cyan,centerTitle: true, backgroundColor: AppColors.primaryColor,title: Text("Favorite",style: TextStyle(color: AppColors.cyan),)),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : favorites.isEmpty
@@ -109,11 +110,11 @@ class _FavoritePageState extends State<FavoritePage> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("تمت إزالة الشقة من المفضلة")),
+        SnackBar(content: Text("the apartment has been removed from favorites")),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("حدث خطأ أثناء الحذف")),
+        SnackBar(content: Text("Error on removing")),
       );
     }
   }
