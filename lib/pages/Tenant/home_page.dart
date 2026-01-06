@@ -1,6 +1,9 @@
 import 'package:app/constants/app_colors.dart';
+import 'package:app/constants/url.dart';
 import 'package:app/data/notifiers.dart';
 import 'package:app/models/api_response.dart';
+import 'package:app/pages/Tenant/add_booking_page.dart';
+import 'package:app/pages/Tenant/bookings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -458,7 +461,7 @@ class ApartmentViewDetails extends StatelessWidget {
     final token = await getToken();
 
     final response = await http.post(
-      Uri.parse("http://192.168.137.231:8000/api/favorites/$apartmentId"),
+      Uri.parse("http://$ip:8000/api/favorites/$apartmentId"),
       headers: {"Authorization": "Bearer $token", "Accept": "application/json"},
     );
 
@@ -497,20 +500,20 @@ class ApartmentViewDetails extends StatelessWidget {
                 Expanded(
                   child: MaterialButton(
                     color: AppColors.cyan,
-                    onPressed: () {},
+                    onPressed: () {
+                       Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => addBookingPage(apartment: specapartment)
+                )
+                       );
+                    },
                     child: Text(
-                      "add",
+                      "Rental Request",
                       style: TextStyle(color: AppColors.primaryColor),
                     ),
                   ),
                 ),
-                // Expanded(
-                //   child: MaterialButton(
-                //     color: AppColors.primaryColor,
-                //     onPressed: () {},
-                //     child: Text("add", style: TextStyle(color: AppColors.cyan)),
-                //   ),
-                // ),
                 Expanded(
                   child: MaterialButton(
                     color: AppColors.cyan,

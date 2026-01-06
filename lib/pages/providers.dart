@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:app/constants/url.dart';
 import 'package:app/services/general_service.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -68,7 +69,7 @@ void clear() {
   }
   Future<void> fetchMyApartments() async {
   final token = await getToken();
-  final url = Uri.parse("http://192.168.137.231:8000/api/owner/apartments");
+  final url = Uri.parse("http://$ip:8000/api/owner/apartments");
 
   final response = await http.get(
     url,
@@ -79,13 +80,25 @@ void clear() {
   );
 
   if (response.statusCode == 200) {
-    
-    final List data = jsonDecode(response.body);
-    myApartments = data.map((e) => Apartment.fromJson(e)).toList();
+  
+    final  data = jsonDecode(response.body);
+     if (data is Map<String, dynamic> && data.containsKey("message")) {
+      print(" ${data["message"]}");
+      return;
+    }
+
+    if (data is List) {
+      myApartments = data.map((e) => Apartment.fromJson(e)).toList();
+      notifyListeners();
+    }
+  } else {
+    print("failed: ${response.statusCode}");
+  }
+
     
     notifyListeners();
   }
 }
 
 
-}
+

@@ -1,7 +1,8 @@
-import 'dart:convert';
-import 'dart:ffi';
+// import 'dart:convert';
+// import 'dart:ffi';
 
 import 'package:app/constants/app_colors.dart';
+import 'package:app/constants/url.dart';
 import 'package:app/data/notifiers.dart';
 import 'package:app/pages/Owner/update_apartment.dart';
 import 'package:app/services/general_service.dart';
@@ -182,7 +183,7 @@ void initState() {
   void deleteApartment(BuildContext context, int id) async {
     final token = await getToken();
     final url = Uri.parse(
-      "http://192.168.137.231:8000/api/owner/apartments/$id",
+      "http://$ip:8000/api/owner/apartments/$id",
     );
 
     final response = await http.delete(

@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:app/constants/app_colors.dart';
+import 'package:app/constants/url.dart';
 import 'package:app/services/general_service.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -23,7 +25,7 @@ class _FavoritePageState extends State<FavoritePage> {
   }
   Future<List<dynamic>> getFavorites(String token) async {
   final response = await http.get(
-    Uri.parse("http://192.168.137.231:8000/api/favorites"),
+    Uri.parse("http://$ip:8000/api/favorites"),
     headers: {
       "Authorization": "Bearer $token",
       "Accept": "application/json",
@@ -34,13 +36,13 @@ class _FavoritePageState extends State<FavoritePage> {
     final data = jsonDecode(response.body);
     return data['favorites'];
   } else {
-    throw Exception("فشل في تحميل المفضلة");
+    throw Exception("failed to load favorite apatment");
   }
 }
 
 
   Future<void> loadFavorites() async {
-    final token = await getToken(); // دالة الحصول على التوكن
+    final token = await getToken(); 
     try {
       final data = await getFavorites(token);
       setState(() {
@@ -50,7 +52,7 @@ class _FavoritePageState extends State<FavoritePage> {
     } catch (e) {
       setState(() => isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("حدث خطأ أثناء تحميل المفضلة")),
+        SnackBar(content: Text("Error in loading")),
       );
     }
   }
@@ -58,21 +60,25 @@ class _FavoritePageState extends State<FavoritePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("المفضلة")),
+      backgroundColor: AppColors.primaryColor,
+
+      appBar: AppBar(centerTitle: true, backgroundColor: AppColors.primaryColor,title: Text("Favorrite",style: TextStyle(color: AppColors.cyan),)),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : favorites.isEmpty
-              ? Center(child: Text("لا توجد شقق في المفضلة"))
+              ? Center(child: Text("no apartment in favorite"))
               : ListView.builder(
                   itemCount: favorites.length,
                   itemBuilder: (context, index) {
                     final fav = favorites[index];
 
                     return Card(
-                      margin: EdgeInsets.all(10),
+                      margin: EdgeInsets.all(3),
                       child: ListTile(
-                        title: Text("رقم الشقة: ${fav['apartment_id']}"),
-                        subtitle: Text("رقم المفضلة: ${fav['id']}"),
+                        tileColor: AppColors.cyan,
+                        
+                        title: Text("apartment id: ${fav['apartment_id']}",style: TextStyle(color: AppColors.primaryColor),),
+                        // subtitle: Text("رقم المفضلة: ${fav['id']}"),
                         trailing: IconButton(
                           icon: Icon(Icons.delete, color: Colors.red),
                           onPressed: () {
@@ -90,7 +96,7 @@ class _FavoritePageState extends State<FavoritePage> {
     final token = await getToken();
 
     final response = await http.delete(
-      Uri.parse("http://192.168.137.231:8000/api/favorites/$apartmentId"),
+      Uri.parse("http://$ip:8000/api/favorites/$apartmentId"),
       headers: {
         "Authorization": "Bearer $token",
         "Accept": "application/json",

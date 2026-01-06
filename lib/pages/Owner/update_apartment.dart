@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:app/constants/app_colors.dart';
+import 'package:app/constants/url.dart';
 import 'package:app/pages/providers.dart';
 import 'package:app/services/general_service.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,7 @@ class _EditApartmentScreenState extends State<EditApartmentScreen> {
   
   Future<void> updateApartment(int id) async {
   final token = await getToken();
-  final url = Uri.parse("http://192.168.137.231:8000/api/owner/apartments/$id");
+  final url = Uri.parse("http://$ip:8000/api/owner/apartments/$id");
 
   final response = await http.put(
     url,

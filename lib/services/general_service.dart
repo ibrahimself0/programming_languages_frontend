@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:app/pages/providers.dart';
+// import 'package:app/pages/providers.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
+// import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants/errors.dart';

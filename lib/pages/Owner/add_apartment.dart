@@ -34,7 +34,7 @@ class _OwnerAddApartmentScreenState extends State<OwnerAddApartmentScreen> {
   }
 
   Future<void> saveApartment() async {
-    var uri = Uri.parse("http://192.168.137.231:8000/api/owner/apartments");
+    var uri = Uri.parse("http://$ip:8000/api/owner/apartments");
     final token = await getToken();
     var request = http.MultipartRequest('POST', uri);
     request.fields['country'] = countryController.text;

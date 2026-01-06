@@ -1,6 +1,7 @@
 
 // Base URL
-const String baseUrl = "http://192.168.137.231:8000/api";
+const String ip ="10.65.11.61";
+const String baseUrl = "http://$ip:8000/api";
 
 // Auth
 const String userUrl = "$baseUrl/user";
