@@ -40,7 +40,7 @@ void initState() {
 
   //   final response = await http.delete(
   //     url,
-  //     headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'},
+  //     headers: {'Authorization': 'Bearer $token', 'Accept': 'application/jFson'},
   //   );
 
   //   if (response.statusCode == 200) {

@@ -133,7 +133,6 @@ Future<bool> logout() async {
   if (response.statusCode == 200) {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('token');
-   
 
     return true;
   } else {
@@ -151,4 +150,86 @@ Future<String?> getRole() async {
   return prefs.getString('user_role');
 }
 
+Future<ApiResponse> getProfile() async {
+  ApiResponse apiResponse = ApiResponse();
+  final token = await getToken();
+  try {
+    final response = await http.get(
+      Uri.parse(profileUrl),
+      headers: {'Accept': 'application/json', 'Authorization': 'Bearer $token'},
+    );
 
+    switch (response.statusCode) {
+      case 200:
+        final data = jsonDecode(response.body);
+
+        final profile = data['profile'];
+
+        apiResponse.data = {
+          'id': profile['id'],
+          'user_id': profile['user_id'],
+          'first_name': profile['first_name'],
+          'last_name': profile['last_name'],
+          'date_of_birth': profile['date_of_birth'],
+          'profile_image':
+              '${data['profile_image_url']}/${profile['profile_image_url']}',
+          'identity_image':
+              '${data['identity_image_url']}/${profile['identity_image_url']}',
+        };
+        apiResponse.error = null;
+        break;
+
+      case 401:
+        apiResponse.error = jsonDecode(response.body)['message'];
+        break;
+
+      default:
+        apiResponse.error = "somethingWentWrong";
+        break;
+    }
+  } catch (e) {
+    apiResponse.error = e.toString();
+  }
+
+  return apiResponse;
+}
+
+Future<ApiResponse> editProfile(
+  String token,
+  Map<String, dynamic>? edits,
+) async {
+  ApiResponse apiResponse = ApiResponse();
+
+  try {
+
+    Uri uri = Uri.parse(profileUrl);
+    if (edits != null) {
+      uri = uri.replace(
+        queryParameters: edits.map(
+          (key, value) => MapEntry(key, value.toString()),
+        ),
+      );
+    }
+
+    final response = await http.put(
+      uri,
+      headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+
+      if (data is List) {
+        print(200);
+      } else {
+        apiResponse.error = "Unexpected response format from server";
+      }
+    } else {
+      apiResponse.error = "Something went wrong (${response.statusCode})";
+    }
+  } catch (e) {
+    apiResponse.error = "Server error: ${e.toString()}";
+  }
+
+  return apiResponse;
+}

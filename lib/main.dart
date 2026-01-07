@@ -7,12 +7,16 @@ import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => ApartmentProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ApartmentProvider()),
+        ChangeNotifierProvider(create: (_) => ProfileProvider()),
+      ],
       child: AppEntry(),
     ),
   );
 }
+
 
 
 class AppEntry extends StatefulWidget {

@@ -85,6 +85,9 @@ class _TenantNavBarState extends State<TenantNavBar> {
             currentIndex: selectedIndex,
             onTap: (value) {
               setState(() {
+                if(value == 3){
+
+                }
                 selectedIndex = value;
               });
             },

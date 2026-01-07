@@ -50,6 +50,7 @@ Future<ApiResponse> getApartmentsFiltered(
         apiResponse.error = "Unexpected response format from server";
       }
     } else {
+
       apiResponse.error = "Something went wrong (${response.statusCode})";
     }
   } catch (e) {
@@ -85,7 +86,7 @@ Future<ApiResponse> getApartments(String token) async {
             .toList();
         break;
       default:
-        apiResponse.error = somethingWentWrong;
+        apiResponse.error = "Something went wrong (${response.statusCode})";
     }
   } catch (e) {
     apiResponse.error = "$serverError : ${e.toString()}";
