@@ -5,12 +5,10 @@ import 'package:http/http.dart' as http;
 
 import '../constants/errors.dart';
 
-
-
 Future<ApiResponse> getApartmentsFiltered(
-    String token,
-      Map<String, dynamic>? filters,
-    ) async {
+  String token,
+  Map<String, dynamic>? filters,
+) async {
   ApiResponse apiResponse = ApiResponse();
 
   try {
@@ -18,7 +16,9 @@ Future<ApiResponse> getApartmentsFiltered(
     Uri uri = Uri.parse(filterApartmentsUrl);
     if (filters != null && filters.isNotEmpty) {
       uri = uri.replace(
-        queryParameters: filters.map((key, value) => MapEntry(key, value.toString())),
+        queryParameters: filters.map(
+          (key, value) => MapEntry(key, value.toString()),
+        ),
       );
     }
 
@@ -34,23 +34,23 @@ Future<ApiResponse> getApartmentsFiltered(
         apiResponse.data = data
             .map<Map<String, dynamic>>(
               (apartment) => {
-            "id": apartment['id'],
-            "owner_id": apartment['owner_id'],
-            "city": apartment['city'],
-            "province": apartment['province'],
-            "description": apartment['description'],
-            "rooms": apartment['rooms'],
-            "price": apartment['price'],
-            "created_at": apartment['created_at'],
-            "updated_at": apartment['updated_at'],
-          },
-        )
+                "id": apartment['id'],
+                "owner_id": apartment['owner_id'],
+                "city": apartment['city'],
+                "province": apartment['province'],
+                "description": apartment['description'],
+                "rooms": apartment['rooms'],
+                "price": apartment['price'],
+                "created_at": apartment['created_at'],
+                "updated_at": apartment['updated_at'],
+                "images":apartment["images"]
+              },
+            )
             .toList();
       } else {
         apiResponse.error = "Unexpected response format from server";
       }
     } else {
-
       apiResponse.error = "Something went wrong (${response.statusCode})";
     }
   } catch (e) {
@@ -59,6 +59,7 @@ Future<ApiResponse> getApartmentsFiltered(
 
   return apiResponse;
 }
+
 Future<ApiResponse> getApartments(String token) async {
   ApiResponse apiResponse = ApiResponse();
   try {
@@ -72,18 +73,20 @@ Future<ApiResponse> getApartments(String token) async {
         apiResponse.data = data
             .map(
               (apartment) => {
-            "id": apartment['id'],
-            "owner_id": apartment['owner_id'],
-            "city": apartment['city'],
-            "province": apartment['province'],
-            "description": apartment['description'],
-            "rooms": apartment['rooms'],
-            "price": apartment['price'],
-            "created_at": apartment['created_at'],
-            "updated_at": apartment['updated_at'],
-          },
-        )
+                "id": apartment['id'],
+                "owner_id": apartment['owner_id'],
+                "city": apartment['city'],
+                "province": apartment['province'],
+                "description": apartment['description'],
+                "rooms": apartment['rooms'],
+                "price": apartment['price'],
+                "created_at": apartment['created_at'],
+                "updated_at": apartment['updated_at'],
+                "images":apartment["images"]
+              },
+            )
             .toList();
+        print(apiResponse.data);
         break;
       default:
         apiResponse.error = "Something went wrong (${response.statusCode})";

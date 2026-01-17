@@ -3,12 +3,49 @@ import 'package:app/constants/url.dart';
 import 'package:app/data/notifiers.dart';
 import 'package:app/models/api_response.dart';
 import 'package:app/pages/Tenant/add_booking_page.dart';
-import 'package:app/pages/Tenant/bookings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../../services/general_service.dart';
 import '../../services/tenant_service.dart';
+
+class _ProvinceBottomSheet extends StatelessWidget {
+  final Function(String) onSelect;
+
+  const _ProvinceBottomSheet({required this.onSelect});
+
+  static const provinces = [
+    'Damascus',
+    'Aleppo',
+    'Homs',
+    'Hama',
+    'Latakia',
+    'Tartous',
+    'Idlib',
+    'Deir el-Zor',
+    'Raqqa',
+    'Hasakah',
+    'Suwayda',
+    'Daraa',
+    'Quneitra',
+    'Rif Dimashq',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      padding: const EdgeInsets.all(16),
+      itemCount: provinces.length,
+      separatorBuilder: (_, __) => const Divider(),
+      itemBuilder: (_, index) => ListTile(
+        title: Text(provinces[index]),
+        onTap: () => onSelect(provinces[index]),
+      ),
+    );
+  }
+}
+
+String? selectedProvince;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,8 +56,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   Map<String, dynamic> filters = {};
-  late final List<ApiResponse> apiResponse = [];
-  int numberOfApiResponses = 0;
+  late ApiResponse apiResponse;
   // initializing it with an empty list cuz the getter filteredApartments can get called by build() before sendApartmentsReq()
   // finishes, so Dart complains that apartments hasn’t been initialized yet
   //late List<Map<String, dynamic>> apartments = [];
@@ -34,33 +70,29 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> sendApartmentsReq(Map<String, dynamic>? filters) async {
     if (filters!.isEmpty) {
-      apiResponse.add(await getApartments(await getToken()));
+      apiResponse = await getApartments(await getToken());
     } else {
-      apiResponse.add(await getApartmentsFiltered(await getToken(), filters));
+      apiResponse = await getApartmentsFiltered(await getToken(), filters);
     }
-
-    if (apiResponse[numberOfApiResponses].error != null) {
+    if (apiResponse.error != null) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           duration: Duration(seconds: 5),
-          content: Text(apiResponse[numberOfApiResponses].error.toString()),
+          content: Text(apiResponse.error.toString()),
           behavior: SnackBarBehavior.floating,
         ),
       );
     } else {
       setState(() {
-        apartmentsNotifier.value =
-            (apiResponse[numberOfApiResponses].data as List<dynamic>)
-                .map((e) => e as Map<String, dynamic>)
-                .toList();
+        apartmentsNotifier.value = (apiResponse.data as List<dynamic>)
+            .map((e) => e as Map<String, dynamic>)
+            .toList();
         isLoadingNotifier.value = false;
       });
     }
-    numberOfApiResponses++;
   }
 
-  String searchQuery = "";
   String? priceFilter;
   RangeValues priceRange = const RangeValues(0, 2000);
   RangeValues roomsRange = const RangeValues(1, 6);
@@ -88,58 +120,59 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
-                    Expanded(
-                      child: TextField(
-                        style: TextStyle(color: AppColors.cyan),
-                        cursorColor: AppColors.cyan,
-                        decoration: InputDecoration(
-                          focusColor: AppColors.cyan,
-                          fillColor: AppColors.cyan,
-                          hintStyle: TextStyle(color: AppColors.cyan),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(color: AppColors.cyan),
-                            borderRadius: BorderRadius.all(Radius.circular(17)),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: AppColors.cyan),
-                          ),
-                          hintText: "Search...",
-                          iconColor: AppColors.cyan,
-                          prefixIcon: Icon(Icons.search, color: AppColors.cyan),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primaryColor, // button fill
+                        foregroundColor: AppColors.cyan, // text/icon color
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 14,
+                          horizontal: 20,
                         ),
-                        onChanged: (value) {
-                          setState(() {
-                            searchQuery = value;
-                            filters['province'] = searchQuery;
-                            sendApartmentsReq(filters);
-                          });
-                        },
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        elevation: 4,
+                        shadowColor: AppColors.cyan,
+                      ),
+                      onPressed: () => showModalBottomSheet(
+                        context: context,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(20),
+                          ),
+                        ),
+                        builder: (_) => _ProvinceBottomSheet(
+                          onSelect: (value) {
+                            setState(() {
+                              selectedProvince = value;
+                              filters["province"] = selectedProvince;
+                              sendApartmentsReq(filters);
+                            });
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            selectedProvince ?? 'Select province',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          const Icon(Icons.arrow_drop_down),
+                        ],
                       ),
                     ),
-                    const SizedBox(width: 5),
-
-                    PopupMenuButton<String>(
-                      icon: Icon(Icons.public, color: AppColors.cyan),
-                      onSelected: (value) => setState(() {
-                        countryFilter = value;
-                        filters['country'] = countryFilter!;
-                        sendApartmentsReq(filters);
-                      }),
-                      itemBuilder: (_) => [
-                        const PopupMenuItem(value: 'USA', child: Text('USA')),
-                        const PopupMenuItem(
-                          value: 'Syria',
-                          child: Text('Syria'),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(width: 5),
-                    IconButton(
-                      icon: Icon(
-                        Icons.bedroom_parent_rounded,
-                        color: AppColors.cyan,
-                      ),
-                      onPressed: () {
+                    const SizedBox(width: 6),
+                    _filterIcon(
+                      icon: Icons.bedroom_parent_rounded,
+                      tooltip: "Rooms",
+                      onTap: () {
                         showModalBottomSheet(
                           context: context,
                           backgroundColor: AppColors.primaryColor,
@@ -148,104 +181,98 @@ class _HomePageState extends State<HomePage> {
                               top: Radius.circular(20),
                             ),
                           ),
-
-                          builder: (context) {
-                            return StatefulBuilder(
-                              builder: (context, setModalState) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(16),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Rooms Range",
-                                        style: TextStyle(
-                                          color: AppColors.cyan,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                          builder: (context) => StatefulBuilder(
+                            builder: (context, setModalState) {
+                              return Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Rooms Range",
+                                      style: TextStyle(
+                                        color: AppColors.cyan,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
                                       ),
-
-                                      const SizedBox(height: 12),
-
-                                      RangeSlider(
-                                        min: 1,
-                                        max: 6,
-                                        divisions: 5,
-                                        values: roomsRange,
-                                        labels: RangeLabels(
+                                    ),
+                                    const SizedBox(height: 12),
+                                    RangeSlider(
+                                      min: 1,
+                                      max: 6,
+                                      divisions: 5,
+                                      values: roomsRange,
+                                      labels: RangeLabels(
+                                        "${roomsRange.start.toInt()}",
+                                        "${roomsRange.end.toInt()}",
+                                      ),
+                                      activeColor: AppColors.cyan,
+                                      inactiveColor: AppColors.darkCyan,
+                                      onChanged: (values) {
+                                        setModalState(() {
+                                          priceRange = values;
+                                        });
+                                      },
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
                                           "${roomsRange.start.toInt()}",
+                                          style: TextStyle(
+                                            color: AppColors.cyan,
+                                          ),
+                                        ),
+                                        Text(
                                           "${roomsRange.end.toInt()}",
+                                          style: TextStyle(
+                                            color: AppColors.cyan,
+                                          ),
                                         ),
-                                        activeColor: AppColors.cyan,
-                                        inactiveColor: AppColors.darkCyan,
-                                        onChanged: (values) {
-                                          setModalState(() {
-                                            roomsRange = values;
+                                      ],
+                                    ),
+                                    const SizedBox(height: 12),
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: TextButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            filters["min_rooms"] = roomsRange
+                                                .start
+                                                .toInt();
+                                            filters["max_rooms"] = roomsRange
+                                                .end
+                                                .toInt();
+                                            sendApartmentsReq(filters);
                                           });
+                                          Navigator.pop(context);
                                         },
-                                      ),
-
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            "${roomsRange.start.toInt()}",
-                                            style: TextStyle(
-                                              color: AppColors.cyan,
-                                            ),
-                                          ),
-                                          Text(
-                                            "${roomsRange.end.toInt()}",
-                                            style: TextStyle(
-                                              color: AppColors.cyan,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-
-                                      const SizedBox(height: 12),
-
-                                      Align(
-                                        alignment: Alignment.centerRight,
-                                        child: TextButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              filters["min_rooms"] = roomsRange
-                                                  .start
-                                                  .toInt();
-                                              filters["max_rooms"] = roomsRange
-                                                  .end
-                                                  .toInt();
-                                              sendApartmentsReq(filters);
-                                            });
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text(
-                                            "Apply",
-                                            style: TextStyle(
-                                              color: AppColors.cyan,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                        child: Text(
+                                          "Apply",
+                                          style: TextStyle(
+                                            color: AppColors.cyan,
+                                            fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            );
-                          },
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
                         );
                       },
                     ),
-                    const SizedBox(width: 5),
-                    IconButton(
-                      icon: Icon(Icons.attach_money, color: AppColors.cyan),
-                      onPressed: () {
+
+                    const SizedBox(width: 8),
+
+                    _filterIcon(
+                      icon: Icons.attach_money,
+                      tooltip: "Price",
+                      onTap: () {
                         showModalBottomSheet(
                           context: context,
                           backgroundColor: AppColors.primaryColor,
@@ -254,112 +281,104 @@ class _HomePageState extends State<HomePage> {
                               top: Radius.circular(20),
                             ),
                           ),
-
-                          builder: (context) {
-                            return StatefulBuilder(
-                              builder: (context, setModalState) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(16),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Price Range",
-                                        style: TextStyle(
-                                          color: AppColors.cyan,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                          builder: (context) => StatefulBuilder(
+                            builder: (context, setModalState) {
+                              return Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Price Range",
+                                      style: TextStyle(
+                                        color: AppColors.cyan,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
                                       ),
-
-                                      const SizedBox(height: 12),
-
-                                      RangeSlider(
-                                        min: 0,
-                                        max: 3000,
-                                        divisions: 30,
-                                        values: priceRange,
-                                        labels: RangeLabels(
+                                    ),
+                                    const SizedBox(height: 12),
+                                    RangeSlider(
+                                      min: 0,
+                                      max: 3000,
+                                      divisions: 30,
+                                      values: priceRange,
+                                      labels: RangeLabels(
+                                        "\$${priceRange.start.toInt()}",
+                                        "\$${priceRange.end.toInt()}",
+                                      ),
+                                      activeColor: AppColors.cyan,
+                                      inactiveColor: AppColors.darkCyan,
+                                      onChanged: (values) => setModalState(
+                                        () => priceRange = values,
+                                      ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
                                           "\$${priceRange.start.toInt()}",
+                                          style: TextStyle(
+                                            color: AppColors.cyan,
+                                          ),
+                                        ),
+                                        Text(
                                           "\$${priceRange.end.toInt()}",
+                                          style: TextStyle(
+                                            color: AppColors.cyan,
+                                          ),
                                         ),
-                                        activeColor: AppColors.cyan,
-                                        inactiveColor: AppColors.darkCyan,
-                                        onChanged: (values) {
-                                          setModalState(() {
-                                            priceRange = values;
+                                      ],
+                                    ),
+                                    const SizedBox(height: 12),
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: TextButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            filters["min_price"] = priceRange
+                                                .start
+                                                .toInt();
+                                            filters["max_price"] = priceRange
+                                                .end
+                                                .toInt();
+                                            sendApartmentsReq(filters);
                                           });
+                                          Navigator.pop(context);
                                         },
-                                      ),
-
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            "\$${priceRange.start.toInt()}",
-                                            style: TextStyle(
-                                              color: AppColors.cyan,
-                                            ),
-                                          ),
-                                          Text(
-                                            "\$${priceRange.end.toInt()}",
-                                            style: TextStyle(
-                                              color: AppColors.cyan,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-
-                                      const SizedBox(height: 12),
-
-                                      Align(
-                                        alignment: Alignment.centerRight,
-                                        child: TextButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              filters["min_price"] = priceRange
-                                                  .start
-                                                  .toInt();
-                                              filters["max_price"] = priceRange
-                                                  .end
-                                                  .toInt();
-                                              sendApartmentsReq(filters);
-                                            });
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text(
-                                            "Apply",
-                                            style: TextStyle(
-                                              color: AppColors.cyan,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                        child: Text(
+                                          "Apply",
+                                          style: TextStyle(
+                                            color: AppColors.cyan,
+                                            fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            );
-                          },
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
                         );
                       },
                     ),
 
-                    IconButton(
-                      onPressed: () async {
+                    const SizedBox(width: 8),
+
+                    _filterIcon(
+                      icon: Icons.refresh,
+                      tooltip: "Reset",
+                      onTap: () {
                         isLoadingNotifier.value = true;
                         sendApartmentsReq({});
-
                         setState(() {
                           isLoadingNotifier.value = false;
+                          selectedProvince = "Select Province";
                           filters = {};
                         });
                       },
-                      icon: Icon(Icons.refresh, color: AppColors.cyan),
                     ),
                   ],
                 ),
@@ -369,84 +388,159 @@ class _HomePageState extends State<HomePage> {
                 child: ValueListenableBuilder(
                   valueListenable: apartmentsNotifier,
                   builder: (context, value, child) {
-                    return GridView.builder(
-                      itemCount: apartmentsNotifier.value.length,
+                    if (apartmentsNotifier.value.isNotEmpty) {
+                      return GridView.builder(
+                        itemCount: apartmentsNotifier.value.length,
 
-                      padding: const EdgeInsets.all(10),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            childAspectRatio: 0.7,
-                            crossAxisSpacing: 8,
-                            mainAxisSpacing: 8,
-                          ),
-                      itemBuilder: (context, index) {
-                        final apartment = apartmentsNotifier.value[index];
-                        final apt = apartmentsNotifier.value[index];
+                        padding: const EdgeInsets.all(10),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              childAspectRatio: 0.7,
+                              crossAxisSpacing: 8,
+                              mainAxisSpacing: 8,
+                            ),
+                        itemBuilder: (context, index) {
+                          final apartment = apartmentsNotifier.value[index];
+                          //final apt = apartmentsNotifier.value[index];
 
-                        return Card(
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(width: 2.0,color: AppColors.cyan),
-                            borderRadius: BorderRadiusGeometry.circular(10)
-                          ),
-                          color: AppColors.primaryColor,
-                          elevation: 3,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              /*Image.asset(
-                                apartments["image"],
-                                width: double.infinity,
-                                height: 120,
-                                fit: BoxFit.cover,
-                                cacheWidth: 300,
-                              ),*/
-                              const SizedBox(height: 5),
-                              Text(
-                                "${apartment["province"]}",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.cyan,
+                          final images = apartment['images'] ?? [];
+                          final imageUrl = images.isNotEmpty
+                              ? "${images[0]['url']}/${images[0]['image_path']}"
+                              : "https://via.placeholder.com/150"; // fallback
+
+                          print(imageUrl);
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => ApartmentViewDetails(
+                                    specapartment: apartment,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: TweenAnimationBuilder<double>(
+                              tween: Tween(begin: 0.95, end: 1),
+                              duration: const Duration(milliseconds: 300),
+                              builder: (context, value, child) {
+                                return Transform.scale(
+                                  scale: value,
+                                  child: child,
+                                );
+                              },
+                              child: Card(
+                                elevation: 6,
+                                shadowColor: AppColors.cyan,
+                                shape: RoundedRectangleBorder(
+                                  side: BorderSide(
+                                    color: AppColors.cyan,
+                                    width: 1.5,
+                                  ),
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                color: AppColors.primaryColor,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(12),
+                                        child:
+                                            apartment['images'] != null &&
+                                                apartment['images'].isNotEmpty
+                                            ? Image.network(
+                                                "${apartment['images'][0]['url']}/${apartment['images'][0]['image_path']}",
+                                                width: double.infinity,
+                                                height: 130,
+                                                fit: BoxFit.cover,
+                                              )
+                                            : Container(
+                                                height: 130,
+                                                color: Colors.grey.shade300,
+                                                child: const Center(
+                                                  child: Icon(
+                                                    Icons.image_not_supported,
+                                                  ),
+                                                ),
+                                              ),
+                                      ),
+                                      const SizedBox(height: 10),
+                                      Text(
+                                        apartment['province'],
+                                        style: TextStyle(
+                                          color: AppColors.cyan,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        "\$${apartment['price']}",
+                                        style: TextStyle(
+                                          color: AppColors.cyan,
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                      Text(
+                                        "${apartment['rooms']} rooms",
+                                        style: TextStyle(
+                                          color: AppColors.cyan,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      Align(
+                                        alignment: Alignment.bottomRight,
+                                        child: Icon(
+                                          Icons.arrow_forward_ios_rounded,
+                                          size: 16,
+                                          color: AppColors.cyan,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                              Text(
-                                "Price: \$${apartment["price"]}",
-                                style: TextStyle(color: AppColors.cyan),
+                            ),
+                          );
+                        },
+                      );
+                    } else {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.apartment,
+                              size: 80,
+                              color: AppColors.cyan.withOpacity(0.5),
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              "No apartments match your filters",
+                              style: TextStyle(
+                                color: AppColors.cyan,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
                               ),
-                              Text(
-                                "Space: ${apartment["rooms"]}",
-                                style: TextStyle(color: AppColors.cyan),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              "Try adjusting your filters or refresh the list.",
+                              style: TextStyle(
+                                color: AppColors.cyan.withOpacity(0.7),
+                                fontSize: 14,
                               ),
-                              Row(
-                                children: [
-                                  const Spacer(),
-                                  IconButton(
-                                    iconSize: 18,
-                                    onPressed: () {
-                                      print(apt);
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              ApartmentViewDetails(
-                                                specapartment: apt,
-                                              ),
-                                        ),
-                                      );
-                                    },
-                                    icon: Icon(
-                                      Icons.info_outline_rounded,
-                                      color: AppColors.cyan,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    );
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      );
+                    }
                   },
                 ),
               ),
@@ -461,6 +555,7 @@ class _HomePageState extends State<HomePage> {
 class ApartmentViewDetails extends StatelessWidget {
   final Map<String, dynamic> specapartment;
   const ApartmentViewDetails({super.key, required this.specapartment});
+
   Future<void> addToFavorites(BuildContext context, int apartmentId) async {
     final token = await getToken();
 
@@ -469,65 +564,111 @@ class ApartmentViewDetails extends StatelessWidget {
       headers: {"Authorization": "Bearer $token", "Accept": "application/json"},
     );
 
-    if (response.statusCode == 201) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Added to favorites")));
-    } else {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Error: ${response.body}")));
-    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          response.statusCode == 201
+              ? "Added to favorites"
+              : "Something went wrong",
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.primaryColor,
       appBar: AppBar(
         backgroundColor: AppColors.primaryColor,
         foregroundColor: AppColors.cyan,
-        title: Text(
-          "ApartmentDetails",
-          style: TextStyle(color: AppColors.cyan),
-        ),
+        title: const Text("Apartment Details"),
         centerTitle: true,
-
-        // backgroundColor: AppColors.cyan,
       ),
       body: Column(
         children: [
-          Placeholder(strokeWidth: 4, fallbackHeight: 300),
           SizedBox(
-            height: 40,
+            height: 220,
+            child: PageView.builder(
+              itemCount: specapartment['images'].length,
+              controller: PageController(viewportFraction: 0.9),
+              itemBuilder: (context, index) {
+                final imageUrl =
+                    "${specapartment['images'][index]['url']}/${specapartment['images'][index]['image_path']}";
+
+                return AnimatedContainer(
+                  duration: const Duration(milliseconds: 400),
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(18),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black,
+                        blurRadius: 10,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(18),
+                    child: Image.network(imageUrl, fit: BoxFit.cover),
+                  ),
+                );
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             child: Row(
               children: [
                 Expanded(
-                  child: MaterialButton(
-                    color: AppColors.cyan,
-                    onPressed: () {
-                       Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => addBookingPage(apartment: specapartment)
-                )
-                       );
+                  child: TweenAnimationBuilder<double>(
+                    tween: Tween(begin: 0.8, end: 1),
+                    duration: const Duration(milliseconds: 400),
+                    builder: (context, value, child) {
+                      return Transform.scale(scale: value, child: child);
                     },
-                    child: Text(
-                      "Rental Request",
-                      style: TextStyle(color: AppColors.primaryColor),
+                    child: MaterialButton(
+                      height: 48,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      color: AppColors.cyan,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                AddBookingPage(apartment: specapartment),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        "Rental Request",
+                        style: TextStyle(
+                          color: AppColors.primaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                 ),
+                const SizedBox(width: 10),
                 Expanded(
                   child: MaterialButton(
+                    height: 48,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
                     color: AppColors.cyan,
-                    onPressed: () async {
-                      await addToFavorites(context,specapartment['id'],);
-                    },
-
-                    child: Text(
-                      "add to Favorite",
-                      style: TextStyle(color: AppColors.primaryColor),
+                    onPressed: () =>
+                        addToFavorites(context, specapartment['id']),
+                    child: Icon(
+                      Icons.favorite_border,
+                      color: AppColors.primaryColor,
                     ),
                   ),
                 ),
@@ -535,40 +676,109 @@ class ApartmentViewDetails extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(0),
-              child: GridView(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 16,
-                  childAspectRatio: 3,
+            child: AnimatedOpacity(
+              opacity: 1,
+              duration: const Duration(milliseconds: 600),
+              child: Padding(
+                padding: const EdgeInsets.all(14),
+                child: Column(
+                  children: [
+                    _infoCard("Province", specapartment['province']),
+                    _infoCard("Price", "\$${specapartment['price']}"),
+                    _infoCard("Rooms", specapartment['rooms'].toString()),
+                    _infoCard("Description", specapartment['description']),
+                  ],
                 ),
-                children: [
-                  Text(
-                    "province : ${specapartment['province']}",
-                    style: TextStyle(color: AppColors.cyan),
-                  ),
-                  Text(
-                    "price : ${specapartment['price']}",
-                    style: TextStyle(color: AppColors.cyan),
-                  ),
-                  Text(
-                    "Description : ${specapartment['description']}",
-                    style: TextStyle(color: AppColors.cyan),
-                  ),
-
-                  Text(
-                    "Number of Rooms : ${specapartment['rooms']}",
-                    style: TextStyle(color: AppColors.cyan),
-                  ),
-                ],
               ),
             ),
           ),
         ],
       ),
-      backgroundColor: AppColors.primaryColor,
     );
   }
+
+  Widget _infoCard(String title, String value) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0, end: 1),
+      duration: const Duration(milliseconds: 400),
+      builder: (context, v, child) {
+        return Transform.translate(
+          offset: Offset(0, 20 * (1 - v)),
+          child: Opacity(opacity: v, child: child),
+        );
+      },
+      child: Card(
+        elevation: 4,
+        shadowColor: AppColors.cyan,
+        color: AppColors.primaryColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(color: AppColors.cyan, width: 1.2),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          child: Row(
+            children: [
+              Container(
+                width: 4,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: AppColors.cyan,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(color: AppColors.cyan, fontSize: 12),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      value,
+                      style: TextStyle(
+                        color: AppColors.cyan,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+Widget _filterIcon({
+  required IconData icon,
+  required VoidCallback onTap,
+  String? tooltip,
+}) {
+  return InkWell(
+    onTap: onTap,
+    borderRadius: BorderRadius.circular(16),
+    child: Container(
+      width: 48,
+      height: 48,
+      decoration: BoxDecoration(
+        color: AppColors.primaryColor,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.cyan,
+            blurRadius: 6,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Icon(icon, color: AppColors.cyan),
+    ),
+  );
 }

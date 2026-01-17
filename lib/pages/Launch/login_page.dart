@@ -111,20 +111,27 @@ class _LoginState extends State<Login> {
                     );
 
                     final data;
+
                     if (response.data != null) {
                       data = response.data as Map<String, dynamic>;
                     } else {
                       data = null;
                     }
+                    print(data);
+
                     if (response.error == null) {
                       final role = data["role"];
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context)  {
+                          builder: (context) {
                             if (role == "tenant") {
                               return TenantNavBar(selectedPage: 0);
                             } else if (role == "owner") {
-                          
+                              if (data["id"] != null) {
+                                saveId(data["id"]);
+                              } else {
+                                saveId("3");
+                              }
 
                               return OwnerNavBar(ownerSelectedPage: 0);
                             } else {

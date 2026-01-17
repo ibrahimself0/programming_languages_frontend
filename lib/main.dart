@@ -1,9 +1,7 @@
-
 import 'package:app/pages/launch/loading_screen.dart';
 import 'package:app/pages/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 
 void main() {
   runApp(
@@ -16,8 +14,6 @@ void main() {
     ),
   );
 }
-
-
 
 class AppEntry extends StatefulWidget {
   const AppEntry({super.key});

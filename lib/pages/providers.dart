@@ -3,11 +3,11 @@ import 'dart:convert';
 import 'package:app/constants/url.dart';
 import 'package:app/models/api_response.dart';
 import 'package:app/services/general_service.dart';
+import 'package:app/services/tenant_service.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/profile.dart';
-import '../services/general_service.dart';
 
 class Apartment {
   final int id;
@@ -16,7 +16,7 @@ class Apartment {
   final String description;
   final int rooms;
   final double price;
-  final String? image;
+  List<dynamic>? images;
 
   Apartment({
     required this.id,
@@ -25,7 +25,7 @@ class Apartment {
     required this.description,
     required this.rooms,
     required this.price,
-    this.image,
+    required this.images,
   });
 
   factory Apartment.fromJson(Map<String, dynamic> json) {
@@ -37,7 +37,7 @@ class Apartment {
       rooms: int.parse(json['rooms'].toString()),
 
       price: double.parse(json['price'].toString()),
-      image: json['image'],
+      images: json['images'] != null ? List<dynamic>.from(json['images']) : [],
     );
   }
 }
@@ -98,13 +98,21 @@ class ApartmentProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  Future<void> fetchAllApartments() async {
+    ApiResponse apiResponse = await getApartments(await getToken());
+    final data = apiResponse.data;
+    if (data is List) {
+      myApartments = data.map((e) => Apartment.fromJson(e)).toList();
+      notifyListeners();
+    }
+  }
 }
 
 class ProfileProvider extends ChangeNotifier {
   Profile? profile;
 
   Future<void> fetchProfile() async {
-    print("Fetching");
     final ApiResponse response = await getProfile();
 
     if (response.error != null || response.data == null) {
@@ -115,7 +123,6 @@ class ProfileProvider extends ChangeNotifier {
     }
     final Map<String, dynamic> profileData =
         response.data as Map<String, dynamic>? ?? {};
-    print(profileData);
     //final profileData =  data["profile"];
     profile = Profile(
       id: profileData['id'] ?? 0,

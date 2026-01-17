@@ -12,6 +12,42 @@ import '../providers.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
+class _ProvinceBottomSheet extends StatelessWidget {
+  final Function(String) onSelect;
+
+  const _ProvinceBottomSheet({required this.onSelect});
+
+  static const provinces = [
+    'Damascus',
+    'Aleppo',
+    'Homs',
+    'Hama',
+    'Latakia',
+    'Tartous',
+    'Idlib',
+    'Deir el-Zor',
+    'Raqqa',
+    'Hasakah',
+    'Suwayda',
+    'Daraa',
+    'Quneitra',
+    'Rif Dimashq',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      padding: const EdgeInsets.all(16),
+      itemCount: provinces.length,
+      separatorBuilder: (_, __) => const Divider(),
+      itemBuilder: (_, index) => ListTile(
+        title: Text(provinces[index]),
+        onTap: () => onSelect(provinces[index]),
+      ),
+    );
+  }
+}
+
 class OwnerAddApartmentScreen extends StatefulWidget {
   const OwnerAddApartmentScreen({super.key});
 
@@ -21,63 +57,95 @@ class OwnerAddApartmentScreen extends StatefulWidget {
 }
 
 class _OwnerAddApartmentScreenState extends State<OwnerAddApartmentScreen> {
-  File? ApartmentImage;
-  Future<void> pickApartmentImage() async {
+  List<File>? apartmentImages = [];
+   late final Apartment ?apartment;
+  Future<void> pickApartmentImages() async {
     final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final pickedFiles = await picker.pickMultiImage(imageQuality: 100);
 
-    if (pickedFile != null) {
+    if (pickedFiles.isNotEmpty) {
       setState(() {
-        ApartmentImage = File(pickedFile.path);
+        apartmentImages = pickedFiles.map((e) => File(e.path)).toList();
       });
     }
   }
 
   Future<void> saveApartment() async {
-    var uri = Uri.parse("http://$ip:8000/api/owner/apartments");
     final token = await getToken();
-    var request = http.MultipartRequest('POST', uri);
-    request.fields['country'] = countryController.text;
-    request.fields['province'] = provinceController.text;
-    request.fields['description'] = descController.text;
-    request.fields['rooms'] = roomsController.text;
-    request.fields['price'] = priceController.text;
 
-    if (ApartmentImage != null) {
-      request.files.add(
-        await http.MultipartFile.fromPath('image', ApartmentImage!.path),
-      );
-    }
+    final createUri = Uri.parse("http://$ip:8000/api/owner/apartments");
+    final createRequest = http.MultipartRequest('POST', createUri);
+    createRequest.fields["country"] = "Syria";
+    //createRequest.fields["city"] = "Damas";
+    createRequest.fields['province'] = provinceController.text;
+    createRequest.fields['description'] = descController.text;
+    createRequest.fields['rooms'] = roomsController.text;
+    createRequest.fields['price'] = priceController.text;
 
-    request.headers['Authorization'] = 'Bearer $token';
-    request.headers['Accept'] = 'application/json';
+    createRequest.headers['Authorization'] = 'Bearer $token';
+    createRequest.headers['Accept'] = 'application/json';
 
-    var streamedResponse = await request.send();
-    var response = await http.Response.fromStream(streamedResponse);
+    final createStream = await createRequest.send();
+    final createResponse = await http.Response.fromStream(createStream);
 
-    print(response.body);
+    final data = jsonDecode(createResponse.body);
 
-    if (response.statusCode == 201) {
-      final data = jsonDecode(response.body);
-
-      final apartment = Apartment.fromJson(data['apartment']);
-      if (!mounted) return;
-
-      Provider.of<ApartmentProvider>(
-        context,
-        listen: false,
-      ).addApartment(apartment);
-
-
-      print("Apartment saved successfully");
-      Navigator.pop(context);
-
+    if (createResponse.statusCode == 201 && data['apartment'] != null) {
+      print(201);
+      apartment = Apartment.fromJson(data['apartment']);
     } else {
-      print("Failed to save apartment: ${response.statusCode}");
+      print(500);
+      print(data);
     }
+
+
+    if (!mounted) return;
+
+
+    if (apartmentImages != null) {
+      List<http.MultipartFile> imageFiles = [];
+
+      for (var img in apartmentImages!) {
+        imageFiles.add(await http.MultipartFile.fromPath('images[]', img.path));
+      }
+      final imageUri = Uri.parse(
+        "http://$ip:8000/api/owner/apartmentsImages/${apartment?.id}",
+      );
+
+      final imageRequest = http.MultipartRequest('POST', imageUri);
+      imageRequest.headers['Authorization'] = 'Bearer $token';
+      imageRequest.headers['Accept'] = 'application/json';
+      imageRequest.files.addAll(imageFiles);
+
+      final imageStreamResponse = await imageRequest.send();
+      final imageResponse = await http.Response.fromStream(imageStreamResponse);
+      print("Upload response: ${imageResponse.statusCode}");
+
+      if (imageResponse.statusCode == 201) {
+        final imagesResponse = await http.get(
+          Uri.parse(
+            "http://$ip:8000/api/owner/apartmentsImages/${apartment?.id}",
+          ),
+          headers: {
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+        );
+        print("GET images response: ${imagesResponse.body}");
+        if (imagesResponse.statusCode == 200) {
+          final imagesData = jsonDecode(imagesResponse.body);
+          apartment?.images = (imagesData['images'] as List);
+        }
+      }
+    }
+    Provider.of<ApartmentProvider>(
+      context,
+      listen: false,
+    ).addApartment(apartment!);
+
+    Navigator.pop(context);
   }
 
-  final countryController = TextEditingController();
   final descController = TextEditingController();
   final priceController = TextEditingController();
   final roomsController = TextEditingController();
@@ -98,143 +166,129 @@ class _OwnerAddApartmentScreenState extends State<OwnerAddApartmentScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            TextFormField(
-              controller: provinceController,
-              style: TextStyle(color: AppColors.cyan),
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.room, color: AppColors.cyan),
-                filled: true,
-                fillColor: Colors.white,
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.cyan),
-                  borderRadius: BorderRadius.circular(15),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              ElevatedButton(
+                onPressed: () => showModalBottomSheet(
+                  context: context,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                  ),
+                  builder: (_) => _ProvinceBottomSheet(
+                    onSelect: (value) {
+                      setState(() {
+                        provinceController.text = value;
+                      });
+                      Navigator.pop(context);
+                    },
+                  ),
                 ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.cyan, width: 2),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                hintStyle: TextStyle(color: AppColors.cyan),
-                hintText: "province",
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextFormField(
-              controller: countryController,
-              style: TextStyle(color: AppColors.cyan),
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.money, color: AppColors.cyan),
-                filled: true,
-                fillColor: Colors.white,
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.cyan),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.cyan, width: 2),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                hintStyle: TextStyle(color: AppColors.cyan),
-                hintText: "country",
-              ),
-            ),
-            const SizedBox(height: 10),
-
-            TextFormField(
-              controller: roomsController,
-              style: TextStyle(color: AppColors.cyan),
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.home_outlined, color: AppColors.cyan),
-                filled: true,
-                fillColor: Colors.white,
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.cyan),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.cyan, width: 2),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                hintStyle: TextStyle(color: AppColors.cyan),
-                hintText: "Number Of Rooms",
-              ),
-            ),
-            const SizedBox(height: 10),
-
-            TextFormField(
-              controller: priceController,
-              style: TextStyle(color: AppColors.cyan),
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.euro, color: AppColors.cyan),
-                filled: true,
-                fillColor: Colors.white,
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.cyan),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.cyan, width: 2),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                hintStyle: TextStyle(color: AppColors.cyan),
-                hintText: "price",
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextFormField(
-              controller: descController,
-              style: TextStyle(color: AppColors.cyan),
-              decoration: InputDecoration(
-                prefixIcon: Icon(
-                  Icons.info_outline_rounded,
-                  color: AppColors.cyan,
-                ),
-                filled: true,
-                fillColor: Colors.white,
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.cyan),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.cyan, width: 2),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                hintStyle: TextStyle(color: AppColors.cyan),
-                hintText: "description",
-              ),
-            ),
-            const SizedBox(height: 10),
-            MaterialButton(
-              onPressed: () {
-                pickApartmentImage();
-              },
-              color: AppColors.cyan,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-
-              child: Text(
-                "ApartmentImage",
-                style: TextStyle(
-                  color: AppColors.primaryColor,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                child: Text(
+                  provinceController.text != ""
+                      ? provinceController.text
+                      : "Select Province",
+                  style: TextStyle(color: AppColors.cyan),
                 ),
               ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: AppColors.cyan,foregroundColor: AppColors.primaryColor),
-              onPressed: () {
-                saveApartment();
-
-                // Navigator.pop(context);
-              },
-              child: const Text('Save'),
-            ),
-          ],
+              const SizedBox(height: 10),
+          
+              TextFormField(
+                controller: roomsController,
+                style: TextStyle(color: AppColors.cyan),
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.home_outlined, color: AppColors.cyan),
+                  filled: true,
+                  fillColor: Colors.white,
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.cyan),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.cyan, width: 2),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  hintStyle: TextStyle(color: AppColors.cyan),
+                  hintText: "Number Of Rooms",
+                ),
+              ),
+              const SizedBox(height: 10),
+          
+              TextFormField(
+                controller: priceController,
+                style: TextStyle(color: AppColors.cyan),
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.euro, color: AppColors.cyan),
+                  filled: true,
+                  fillColor: Colors.white,
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.cyan),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.cyan, width: 2),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  hintStyle: TextStyle(color: AppColors.cyan),
+                  hintText: "price",
+                ),
+              ),
+              const SizedBox(height: 10),
+              TextFormField(
+                controller: descController,
+                style: TextStyle(color: AppColors.cyan),
+                decoration: InputDecoration(
+                  prefixIcon: Icon(
+                    Icons.info_outline_rounded,
+                    color: AppColors.cyan,
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.cyan),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.cyan, width: 2),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  hintStyle: TextStyle(color: AppColors.cyan),
+                  hintText: "description",
+                ),
+              ),
+              const SizedBox(height: 10),
+              MaterialButton(
+                onPressed: () async {
+                  pickApartmentImages();
+                },
+                color: AppColors.cyan,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          
+                child: Text(
+                  "ApartmentImage",
+                  style: TextStyle(
+                    color: AppColors.primaryColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.cyan,
+                  foregroundColor: AppColors.primaryColor,
+                ),
+                onPressed: () async {
+                  saveApartment();
+                },
+                child: const Text('Save'),
+              ),
+            ],
+          ),
         ),
       ),
     );

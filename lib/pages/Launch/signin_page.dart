@@ -50,6 +50,7 @@ class _SignInState extends State<SignIn> {
       });
     }
   }
+
   Future<void> pickDateOfBirth(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -61,7 +62,7 @@ class _SignInState extends State<SignIn> {
     if (pickedDate != null) {
       setState(() {
         dateOfBirthController.text =
-        "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
+            "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
       });
     }
   }
@@ -215,19 +216,22 @@ class _SignInState extends State<SignIn> {
               const SizedBox(height: 10),
               MaterialButton(
                 onPressed: () async {
-                  if (signState.currentState!.validate() && profileImage != null && identityImage !=null ) {
+                  if (signState.currentState!.validate() &&
+                      profileImage != null &&
+                      identityImage != null) {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => SigninPage2(role: widget.role),
                       ),
                     );
-                  }else{
+                  } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          duration: Duration(seconds: 5),
-                          content: Text("Don't forget to enter images"),
-                          behavior: SnackBarBehavior.floating,
-                        ));
+                      SnackBar(
+                        duration: Duration(seconds: 5),
+                        content: Text("Don't forget to enter images"),
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
                   }
                 },
                 color: AppColors.cyan,
@@ -333,7 +337,6 @@ class _SigninPage2State extends State<SigninPage2> {
               ),
               MaterialButton(
                 onPressed: () async {
-
                   if (signState.currentState!.validate()) {
                     ApiResponse response = await register(
                       phoneNumber: phoneNumberController.text,
@@ -343,16 +346,27 @@ class _SigninPage2State extends State<SigninPage2> {
                       role: widget.role,
                       password: passwordController.text,
                       profileImage: profileImage!,
-                      identityImage: identityImage!
-
+                      identityImage: identityImage!,
                     );
-                    if (response.error == null) {
+                    ApiResponse response2 = await login(
+                      number: phoneNumberController.text,
+                      password: passwordController.text,
+                    );
+
+                    final data;
+                    if (response2.data != null) {
+                      data = response2.data as Map<String, dynamic>;
+                      await saveToken(data["token"]);
+                    } else {
+                      data = null;
+                    }
+                    if (response.error == null || response.data != null) {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) {
-                            if(widget.role == "owner"){
+                            if (widget.role == "owner") {
                               return OwnerNavBar(ownerSelectedPage: 0);
-                            }else if(widget.role == "tenant"){
+                            } else if (widget.role == "tenant") {
                               return TenantNavBar(selectedPage: 0);
                             }
                             return ErrorPage();
@@ -360,7 +374,6 @@ class _SigninPage2State extends State<SigninPage2> {
                         ),
                       );
                     } else {
-
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           duration: Duration(seconds: 5),

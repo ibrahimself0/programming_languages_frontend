@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 
+import 'ReservationsPage.dart';
 import 'my_apartment.dart';
 
 
@@ -23,7 +24,7 @@ class _OwnerNavBarState extends State<OwnerNavBar> {
     // HomeView(),
     // HomeSecondaryView(),
     MyApartments(),
-    
+     ReservationsPage(),
     ProfilePage(),
   ];
    late int ownersSelectedIndex = widget.ownerSelectedPage;
@@ -101,6 +102,11 @@ class _OwnerNavBarState extends State<OwnerNavBar> {
                 backgroundColor: AppColors.cyan,
                 icon: Icon(Icons.home, color: AppColors.cyan),
                 label: "MyApartment",
+              ),
+              BottomNavigationBarItem(
+                backgroundColor: AppColors.cyan,
+                icon: Icon(Icons.data_thresholding, color: AppColors.cyan),
+                label: "Reservations",
               ),
               BottomNavigationBarItem(
                 backgroundColor: AppColors.primaryColor,

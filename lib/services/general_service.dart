@@ -19,7 +19,15 @@ Future<String> getToken() async {
   final prefs = await SharedPreferences.getInstance();
   return prefs.getString('token') ?? "";
 }
-
+Future<void> saveId(String id) async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setString('id', id);
+}
+Future<int?> getIntId() async {
+  final prefs = await SharedPreferences.getInstance();
+  String rawId = prefs.getString('id')?.trim() ?? "";
+  return int.tryParse(rawId);
+}
 Future<ApiResponse> login({
   required String number,
   required String password,
