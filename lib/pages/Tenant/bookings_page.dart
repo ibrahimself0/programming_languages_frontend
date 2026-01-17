@@ -60,6 +60,7 @@ class _BookingPageState extends State<BookingPage> {
     final bool isFinished = reservation["status"] == "approved";
 
     return Card(
+      color: Colors.white,
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -126,17 +127,20 @@ class _BookingPageState extends State<BookingPage> {
             backgroundColor: AppColors.primaryColor,
             appBar: AppBar(
               backgroundColor: AppColors.primaryColor,
+              automaticallyImplyLeading: false,
               elevation: 0,
-              bottom: TabBar(
-                indicatorColor: AppColors.cyan,
+              toolbarHeight: 0,
+              bottom: const TabBar(
                 labelColor: AppColors.cyan,
                 unselectedLabelColor: AppColors.cyan,
+                indicatorColor: AppColors.cyan,
                 tabs: const [
                   Tab(text: "Finished"),
                   Tab(text: "Not Finished"),
                 ],
               ),
             ),
+
             body: isLoading
                 ? const Center(
                     child: CircularProgressIndicator(color: AppColors.cyan),

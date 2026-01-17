@@ -1,3 +1,4 @@
+import 'package:app/models/api_response.dart';
 import 'package:flutter/material.dart';
 import 'package:app/services/owner_service.dart';
 import 'package:provider/provider.dart';
@@ -138,15 +139,17 @@ class _ReservationCardState extends State<ReservationCard> {
                                     ),
                                   ),
                                   onPressed: () async {
-                                    setState(() {
-                                      pending.value.remove(widget.reservation);
-                                      widget.reservation["status"] = "rejected";
-                                    });
                                     await handlePendingReservation(
                                       widget.reservation['id'],
                                       'reject',
                                     );
+
+                                    setState(() {
+                                      pending.value.remove(widget.reservation);
+                                      widget.reservation["status"] = "rejected";
+                                    });
                                   },
+
                                   child: const Text("Reject"),
                                 ),
                               ),
@@ -161,15 +164,35 @@ class _ReservationCardState extends State<ReservationCard> {
                                     ),
                                   ),
                                   onPressed: () async {
-                                    setState(() {
-                                      pending.value.remove(widget.reservation);
-                                      widget.reservation["status"] = "approved";
-                                      accepted.value.add(widget.reservation);
-                                    });
-                                    await handlePendingReservation(
-                                      widget.reservation['id'],
-                                      'accept',
-                                    );
+                                    ApiResponse apiResponse =
+                                        await handlePendingReservation(
+                                          widget.reservation['id'],
+                                          'accept',
+                                        );
+                                    if (apiResponse.error == null) {
+                                      setState(() {
+                                        pending.value.remove(
+                                          widget.reservation,
+                                        );
+                                        widget.reservation["status"] =
+                                            "approved";
+                                        accepted.value.add(widget.reservation);
+                                      });
+                                    } else {
+                                      await handlePendingReservation(
+                                        widget.reservation['id'],
+                                        'reject',
+                                      );
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            "error: ${apiResponse.error}",
+                                          ),
+                                        ),
+                                      );
+                                    }
                                   },
 
                                   child: const Text("Accept"),

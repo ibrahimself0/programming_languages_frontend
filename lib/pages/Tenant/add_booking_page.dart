@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:app/constants/app_colors.dart';
 import 'package:app/constants/url.dart';
+import 'package:app/models/api_response.dart';
 import 'package:app/services/general_service.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -97,14 +98,20 @@ class _AddBookingPageState extends State<AddBookingPage> {
     setState(() => isLoading = true);
     try {
       print("SENDING REQUEST");
-      await createBook().createReservation(
+      ApiResponse apiResponse = await createBook().createReservation(
         widget.apartment['id'],
         _startDateController.text,
         _endDateController.text,
       );
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Done")));
+      if(apiResponse.error == null){
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Done")));
+      }else{
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(apiResponse.error.toString())));
+      }
       Navigator.pop(context);
     } catch (e) {
       print(e);
@@ -115,7 +122,6 @@ class _AddBookingPageState extends State<AddBookingPage> {
       setState(() => isLoading = false);
     }
     print("REQUEST FINISHED");
-
   }
 
   Widget build(BuildContext context) {
@@ -262,13 +268,13 @@ class _AddBookingPageState extends State<AddBookingPage> {
 
 class createBook {
   final String baseUrl = "http://$ip:8000/api";
-  Future<void> createReservation(
+  Future<ApiResponse> createReservation(
     int apartmentId,
     String startDate,
     String endDate,
   ) async {
     final token = await getToken();
-
+    ApiResponse apiResponse = ApiResponse();
     final headers = {
       "Accept": "application/json",
       "Content-Type": "application/json",
@@ -283,9 +289,16 @@ class createBook {
       headers: headers,
       body: jsonEncode({"start_date": startDate, "end_date": endDate}),
     );
+    if (response.statusCode == 201) {
+      final data = jsonDecode(response.body)['message'];
+      print(" data : $data");
+      apiResponse.data = data;
+    }
 
     if (response.statusCode != 201) {
-      throw Exception(jsonDecode(response.body)['message']);
+      apiResponse.error = jsonDecode(response.body)['message'];
+      print(apiResponse.error);
     }
+    return apiResponse;
   }
 }
