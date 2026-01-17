@@ -16,7 +16,7 @@ class LoadingScreen extends StatefulWidget {
 class _LoadingScreenState extends State<LoadingScreen> {
   void checkUserHasToken() async {
     String token = await getToken();
-    //token = "";
+    token = "";
     if (token == "") {
       if (!mounted) return;
       Navigator.pushReplacement(

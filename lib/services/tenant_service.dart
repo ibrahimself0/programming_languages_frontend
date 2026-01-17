@@ -4,6 +4,7 @@ import 'package:app/models/api_response.dart';
 import 'package:http/http.dart' as http;
 
 import '../constants/errors.dart';
+import 'general_service.dart';
 
 Future<ApiResponse> getApartmentsFiltered(
   String token,
@@ -43,7 +44,7 @@ Future<ApiResponse> getApartmentsFiltered(
                 "price": apartment['price'],
                 "created_at": apartment['created_at'],
                 "updated_at": apartment['updated_at'],
-                "images":apartment["images"]
+                "images": apartment["images"],
               },
             )
             .toList();
@@ -82,11 +83,10 @@ Future<ApiResponse> getApartments(String token) async {
                 "price": apartment['price'],
                 "created_at": apartment['created_at'],
                 "updated_at": apartment['updated_at'],
-                "images":apartment["images"]
+                "images": apartment["images"],
               },
             )
             .toList();
-        print(apiResponse.data);
         break;
       default:
         apiResponse.error = "Something went wrong (${response.statusCode})";
@@ -94,5 +94,70 @@ Future<ApiResponse> getApartments(String token) async {
   } catch (e) {
     apiResponse.error = "$serverError : ${e.toString()}";
   }
+  return apiResponse;
+}
+
+Future<ApiResponse> cancelReservation(int id) async {
+  ApiResponse apiResponse = ApiResponse();
+  final token = await getToken();
+  try {
+    final response = await http.put(
+      Uri.parse("$tenantReservationCancelUrl/$id"),
+      headers: {'Accept': 'application/json', 'Authorization': 'Bearer $token'},
+    );
+    print(response.statusCode);
+    switch (response.statusCode) {
+      case 200:
+        final data = jsonDecode(response.body);
+        print(data);
+        apiResponse.data = data['message'];
+        apiResponse.error = null;
+        break;
+
+      case 401:
+        apiResponse.error = jsonDecode(response.body)['message'];
+        break;
+
+      default:
+        apiResponse.error = "somethingWentWrong";
+        break;
+    }
+  } catch (e) {
+    apiResponse.error = e.toString();
+  }
+
+  return apiResponse;
+}
+Future<ApiResponse> rateApartment(String rate,int id) async {
+  ApiResponse apiResponse = ApiResponse();
+  final token = await getToken();
+  try {
+    final response = await http.post(
+      Uri.parse("$tenantRateApartmentUrl/$id"),
+      headers: {'Accept': 'application/json', 'Authorization': 'Bearer $token'},
+      body: {"rating": rate},
+    );
+
+    print(response.statusCode);
+    switch (response.statusCode) {
+      case 200:
+        final data = jsonDecode(response.body);
+        print(data);
+        apiResponse.data = data['message'];
+        apiResponse.error = null;
+        break;
+
+      case 401:
+        apiResponse.error = jsonDecode(response.body)['message'];
+        break;
+
+      default:
+        apiResponse.error = "somethingWentWrong";
+        break;
+    }
+  } catch (e) {
+    apiResponse.error = e.toString();
+  }
+
   return apiResponse;
 }

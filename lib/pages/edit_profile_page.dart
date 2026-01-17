@@ -1,6 +1,9 @@
-import 'package:app/constants/app_colors.dart';
+import 'dart:io';
+import 'package:app/services/general_service.dart';
 import 'package:flutter/material.dart';
-import 'Tenant/tenant_navigation.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:app/constants/app_colors.dart';
+
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
 
@@ -9,109 +12,61 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  final TextEditingController firstNameController = TextEditingController();
-  final TextEditingController lastNameController = TextEditingController();
-  final TextEditingController dobController = TextEditingController();
-  final TextEditingController pictureController = TextEditingController();
+  File? imageFile;
+  final ImagePicker picker = ImagePicker();
+  Map<String, String> edit = {};
+  Future<void> pickImage() async {
+    final XFile? picked = await picker.pickImage(source: ImageSource.gallery);
+
+    if (picked != null) {
+      setState(() {
+        imageFile = File(picked.path);
+      });
+    }
+  }
+
+  Widget buildButton(String text, VoidCallback onPressed) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.cyan,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+      child: Text(text, style: const TextStyle(color: Colors.white)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: const Text("Edit Profile Image"),
         foregroundColor: AppColors.cyan,
         backgroundColor: AppColors.primaryColor,
+        elevation: 0,
       ),
-      body: Container(
-        padding: const EdgeInsets.all(10),
-        color: AppColors.primaryColor,
+      backgroundColor: AppColors.primaryColor,
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextField(
-              controller: firstNameController,
-              keyboardType: TextInputType.number,
-              style: TextStyle(color: AppColors.cyan),
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.person, color: AppColors.cyan),
-                filled: true,
-                fillColor: AppColors.primaryColor,
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.cyan),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.cyan, width: 2),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                hintStyle: TextStyle(color: AppColors.cyan),
-                hintText: "First Name",
-              ),
+            CircleAvatar(
+              radius: 70,
+              backgroundColor: AppColors.cyan,
+              backgroundImage: imageFile != null ? FileImage(imageFile!) : null,
+              child: imageFile == null
+                  ? Icon(Icons.person, size: 70, color: AppColors.cyan)
+                  : null,
             ),
+
+            const SizedBox(height: 20),
+
+            buildButton("Choose Image", pickImage),
             const SizedBox(height: 10),
-            TextField(
-              controller: lastNameController,
-              keyboardType: TextInputType.number,
-              style: TextStyle(color: AppColors.cyan),
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.person, color: AppColors.cyan),
-                filled: true,
-                fillColor: AppColors.primaryColor,
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.cyan),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.cyan, width: 2),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                hintStyle: TextStyle(color: AppColors.cyan),
-                hintText: "Last Name",
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: dobController,
-              keyboardType: TextInputType.number,
-              style: TextStyle(color: AppColors.cyan),
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.calendar_today, color: AppColors.cyan),
-                filled: true,
-                fillColor: AppColors.primaryColor,
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.cyan),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.cyan, width: 2),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                hintStyle: TextStyle(color: AppColors.cyan),
-                hintText: "Date OF Birth",
-              ),
-            ),
-            const SizedBox(height: 10),
-            MaterialButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) {
-                    return TenantNavBar(selectedPage: 3);
-                  }
-                ));
-              },
-              color: AppColors.cyan,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Text(
-                "Confirm",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+            buildButton("Confirm", () async {
+              edit["profile_image"] = imageFile!.path;
+              editProfile(await getToken(), imageFile);
+            }),
           ],
         ),
       ),

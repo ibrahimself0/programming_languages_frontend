@@ -1,16 +1,16 @@
 import 'package:app/constants/app_colors.dart';
 import 'package:app/data/notifiers.dart';
-import 'package:app/models/api_response.dart';
+
 import 'package:app/pages/Tenant/favorite_page.dart';
 import 'package:app/pages/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/profile.dart';
 import '../services/general_service.dart';
-import 'Launch/signin_page.dart';
+
 import 'edit_profile_page.dart';
 import 'launch/start_page.dart';
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -97,39 +97,40 @@ class _ProfilePageState extends State<ProfilePage> {
                         );
                       },
                     ),
-                    ListTile(
-                      leading: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: const BoxDecoration(
-                          color: Colors.teal,
-                          shape: BoxShape.circle,
+
+                      ListTile(
+                        leading: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: const BoxDecoration(
+                            color: Colors.teal,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.favorite,
+                            color: Colors.white,
+                          ),
                         ),
-                        child: const Icon(
-                          Icons.favorite,
-                          color: Colors.white,
+                        title: const Text(
+                          "Favorite",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.cyan,
+                          ),
                         ),
-                      ),
-                      title: const Text(
-                        "Favorite",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
+                        trailing: const Icon(
+                          Icons.chevron_right,
                           color: AppColors.cyan,
                         ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const FavoritePage(),
+                            ),
+                          );
+                        },
                       ),
-                      trailing: const Icon(
-                        Icons.chevron_right,
-                        color: AppColors.cyan,
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const FavoritePage(),
-                          ),
-                        );
-                      },
-                    ),
                     const Spacer(),
                     SizedBox(
                       width: double.infinity,
@@ -142,13 +143,15 @@ class _ProfilePageState extends State<ProfilePage> {
                                 backgroundColor: AppColors.cyan,
                                 title: Text(
                                   "Warning",
-                                  style:
-                                  TextStyle(color: AppColors.primaryColor),
+                                  style: TextStyle(
+                                    color: AppColors.primaryColor,
+                                  ),
                                 ),
                                 content: Text(
                                   "Are You Sure?",
-                                  style:
-                                  TextStyle(color: AppColors.primaryColor),
+                                  style: TextStyle(
+                                    color: AppColors.primaryColor,
+                                  ),
                                 ),
                                 actions: [
                                   TextButton(
@@ -158,20 +161,25 @@ class _ProfilePageState extends State<ProfilePage> {
                                           context,
                                           listen: false,
                                         ).clear();
-                                        Navigator.of(context)
-                                            .pushAndRemoveUntil(
+                                        Navigator.of(
+                                          context,
+                                        ).pushAndRemoveUntil(
                                           MaterialPageRoute(
                                             builder: (context) => StartPage(),
                                           ),
-                                              (route) => false,
+                                          (route) => false,
                                         );
                                       } else {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
                                           SnackBar(
-                                            duration: const Duration(seconds: 5),
+                                            duration: const Duration(
+                                              seconds: 5,
+                                            ),
                                             content: const Text(
-                                                "Something Went Wrong"),
+                                              "Something Went Wrong",
+                                            ),
                                             behavior: SnackBarBehavior.floating,
                                           ),
                                         );
@@ -195,7 +203,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             Text(
                               "LogOut",
                               style: TextStyle(
-                                  color: AppColors.cyan, fontSize: 20),
+                                color: AppColors.cyan,
+                                fontSize: 20,
+                              ),
                             ),
                             Icon(
                               Icons.logout_outlined,
@@ -205,6 +215,26 @@ class _ProfilePageState extends State<ProfilePage> {
                           ],
                         ),
                       ),
+                    ),
+                    SwitchListTile(
+                      inactiveTrackColor: AppColors.cyan,
+                      activeThumbColor: AppColors.cyan,
+                      secondary: const Icon(Icons.dark_mode),
+                      title: Text(
+                        "Dark Mode",
+                        style: TextStyle(fontSize: 20, color: AppColors.cyan),
+                      ),
+                      value: isDarkModeNotifier.value,
+                      onChanged: (val) {
+                        setState(() {
+                          isDarkModeNotifier.value = val;
+                          if (isDarkModeNotifier.value) {
+                            AppColors.primaryColor = Colors.black;
+                          } else {
+                            AppColors.primaryColor = Colors.white;
+                          }
+                        });
+                      },
                     ),
                   ],
                 ),

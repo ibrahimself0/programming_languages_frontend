@@ -34,7 +34,6 @@ Future<ApiResponse> handlePendingReservation(
   ApiResponse apiResponse = ApiResponse();
 
   try {
-    print("handling");
     final token = await getToken();
 
     final response = await http.put(
@@ -50,11 +49,9 @@ Future<ApiResponse> handlePendingReservation(
     );
 
     final data = jsonDecode(response.body);
-    print("data {$data}");
-    print(response.statusCode);
     if (response.statusCode == 200) {
       apiResponse.data = data;
-      print(apiResponse.data);
+
     } else {
       apiResponse.error = data["message"] ?? "Something went wrong";
     }

@@ -6,6 +6,8 @@ import 'package:app/services/general_service.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import '../../services/tenant_service.dart';
+
 class BookingPage extends StatefulWidget {
   @override
   State<BookingPage> createState() => _BookingPageState();
@@ -44,7 +46,7 @@ class _BookingPageState extends State<BookingPage> {
 
       finished = data.where((r) => r["status"] == "approved").toList();
 
-      notFinished = data.where((r) => r["status"] != "approved").toList();
+      notFinished = data.where((r) => r["status"] == "pending").toList();
 
       setState(() => isLoading = false);
     } catch (e) {
@@ -58,7 +60,6 @@ class _BookingPageState extends State<BookingPage> {
   Widget buildReservationCard(dynamic reservation) {
     final apartment = reservation["apartment"];
     final bool isFinished = reservation["status"] == "approved";
-
     return Card(
       color: Colors.white,
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -108,6 +109,25 @@ class _BookingPageState extends State<BookingPage> {
                   "${reservation['start_date']} → ${reservation['end_date']}",
                   style: const TextStyle(fontSize: 13),
                 ),
+                if (!isFinished || reservation["status"] == "rejected")
+                  Expanded(
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: AppColors.cyan,
+                        side: BorderSide(color: AppColors.cyan),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      onPressed: () async {
+                        await cancelReservation(reservation["id"]);
+                        setState(() {
+                          notFinished.remove(reservation);
+                        });
+                      },
+                      child: const Text("Reject"),
+                    ),
+                  ),
               ],
             ),
           ],
@@ -134,7 +154,7 @@ class _BookingPageState extends State<BookingPage> {
                 labelColor: AppColors.cyan,
                 unselectedLabelColor: AppColors.cyan,
                 indicatorColor: AppColors.cyan,
-                tabs: const [
+                tabs: [
                   Tab(text: "Finished"),
                   Tab(text: "Not Finished"),
                 ],
@@ -149,7 +169,7 @@ class _BookingPageState extends State<BookingPage> {
                     children: [
                       finished.isEmpty
                           ? const Center(
-                              child: Text("No finished reservations 👀"),
+                              child: Text("No finished reservations "),
                             )
                           : ListView.builder(
                               itemCount: finished.length,
@@ -157,9 +177,7 @@ class _BookingPageState extends State<BookingPage> {
                                   buildReservationCard(finished[index]),
                             ),
                       notFinished.isEmpty
-                          ? const Center(
-                              child: Text("No active reservations 😴"),
-                            )
+                          ? const Center(child: Text("No active reservations "))
                           : ListView.builder(
                               itemCount: notFinished.length,
                               itemBuilder: (context, index) =>

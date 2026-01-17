@@ -122,8 +122,8 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primaryColor, // button fill
-                        foregroundColor: AppColors.cyan, // text/icon color
+                        backgroundColor: AppColors.primaryColor,
+                        foregroundColor: AppColors.cyan,
                         padding: const EdgeInsets.symmetric(
                           vertical: 14,
                           horizontal: 20,
@@ -211,7 +211,7 @@ class _HomePageState extends State<HomePage> {
                                       inactiveColor: AppColors.darkCyan,
                                       onChanged: (values) {
                                         setModalState(() {
-                                          priceRange = values;
+                                          roomsRange = values;
                                         });
                                       },
                                     ),
@@ -408,8 +408,6 @@ class _HomePageState extends State<HomePage> {
                           final imageUrl = images.isNotEmpty
                               ? "${images[0]['url']}/${images[0]['image_path']}"
                               : "https://via.placeholder.com/150"; // fallback
-
-                          print(imageUrl);
                           return GestureDetector(
                             onTap: () {
                               Navigator.push(
@@ -517,7 +515,7 @@ class _HomePageState extends State<HomePage> {
                             Icon(
                               Icons.apartment,
                               size: 80,
-                              color: AppColors.cyan.withOpacity(0.5),
+                              color: AppColors.cyan,
                             ),
                             const SizedBox(height: 16),
                             Text(
@@ -532,7 +530,7 @@ class _HomePageState extends State<HomePage> {
                             Text(
                               "Try adjusting your filters or refresh the list.",
                               style: TextStyle(
-                                color: AppColors.cyan.withOpacity(0.7),
+                                color: AppColors.cyan,
                                 fontSize: 14,
                               ),
                               textAlign: TextAlign.center,
@@ -577,6 +575,7 @@ class ApartmentViewDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: AppColors.primaryColor,
       appBar: AppBar(
@@ -687,6 +686,19 @@ class ApartmentViewDetails extends StatelessWidget {
                     _infoCard("Price", "\$${specapartment['price']}"),
                     _infoCard("Rooms", specapartment['rooms'].toString()),
                     _infoCard("Description", specapartment['description']),
+
+                    /*ListView.separated(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: 5,
+                      separatorBuilder: (_, __) => const Divider(),
+                      itemBuilder: (_, index) => ListTile(
+                        title: Text(rate[index] as String),
+                        onTap: () {
+                          selectedRate = 1 as String;
+                        },
+                      ),
+                    ),*/
+
                   ],
                 ),
               ),
@@ -744,7 +756,13 @@ class ApartmentViewDetails extends StatelessWidget {
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
+
                     ),
+                    Text(
+                      title,
+                      style: TextStyle(color: AppColors.cyan, fontSize: 12),
+                    ),
+                    const SizedBox(height: 6),
                   ],
                 ),
               ),

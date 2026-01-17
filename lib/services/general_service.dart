@@ -19,15 +19,18 @@ Future<String> getToken() async {
   final prefs = await SharedPreferences.getInstance();
   return prefs.getString('token') ?? "";
 }
+
 Future<void> saveId(String id) async {
   final prefs = await SharedPreferences.getInstance();
   await prefs.setString('id', id);
 }
+
 Future<int?> getIntId() async {
   final prefs = await SharedPreferences.getInstance();
   String rawId = prefs.getString('id')?.trim() ?? "";
   return int.tryParse(rawId);
 }
+
 Future<ApiResponse> login({
   required String number,
   required String password,
@@ -202,38 +205,40 @@ Future<ApiResponse> getProfile() async {
   return apiResponse;
 }
 
-Future<ApiResponse> editProfile(
-  String token,
-  Map<String, dynamic>? edits,
-) async {
+Future<ApiResponse> editProfile(String token, File? imageFile) async {
   ApiResponse apiResponse = ApiResponse();
 
   try {
+    var uri = Uri.parse(profileUrl);
 
-    Uri uri = Uri.parse(profileUrl);
-    if (edits != null) {
-      uri = uri.replace(
-        queryParameters: edits.map(
-          (key, value) => MapEntry(key, value.toString()),
+    var request = http.MultipartRequest('PUT', uri);
+
+
+    request.headers.addAll({
+      'Authorization': 'Bearer $token',
+      'Accept': 'application/json',
+      'Content-Type': 'multipart/form-data',
+    });
+
+    if (imageFile != null) {
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'profile_image',
+          imageFile.path,
         ),
       );
     }
 
-    final response = await http.put(
-      uri,
-      headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'},
-    );
+    var response = await request.send();
+    var responseBody = await http.Response.fromStream(response);
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
 
-      if (data is List) {
-        print(200);
-      } else {
-        apiResponse.error = "Unexpected response format from server";
-      }
+
+    if (responseBody.statusCode == 200) {
+      apiResponse.data = jsonDecode(responseBody.body);
     } else {
-      apiResponse.error = "Something went wrong (${response.statusCode})";
+      apiResponse.error =
+          jsonDecode(responseBody.body)['message'] ?? 'Something went wrong';
     }
   } catch (e) {
     apiResponse.error = "Server error: ${e.toString()}";

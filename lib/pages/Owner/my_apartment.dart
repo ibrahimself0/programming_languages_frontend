@@ -127,6 +127,16 @@ class _MyApartmentsState extends State<MyApartments> {
                                         fontSize: 14,
                                       ),
                                     ),
+                                    const SizedBox(height: 6,),
+                                    Text(
+                                      "Apartment Id : ${apt.id}",
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        color: AppColors.primaryColor,
+                                        fontSize: 16,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),

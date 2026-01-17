@@ -85,7 +85,6 @@ class ApartmentProvider extends ChangeNotifier {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       if (data is Map<String, dynamic> && data.containsKey("message")) {
-        print(" ${data["message"]}");
         return;
       }
 
@@ -93,8 +92,6 @@ class ApartmentProvider extends ChangeNotifier {
         myApartments = data.map((e) => Apartment.fromJson(e)).toList();
         notifyListeners();
       }
-    } else {
-      print("failed: ${response.statusCode}");
     }
     notifyListeners();
   }
@@ -116,7 +113,6 @@ class ProfileProvider extends ChangeNotifier {
     final ApiResponse response = await getProfile();
 
     if (response.error != null || response.data == null) {
-      print("API returned error or null data");
       profile = null;
       notifyListeners();
       return;

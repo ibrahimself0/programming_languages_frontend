@@ -2,9 +2,7 @@ import 'package:app/constants/app_colors.dart';
 import 'package:app/models/api_response.dart';
 import 'package:app/pages/Owner/owner_navigation.dart';
 import 'package:app/pages/error_page.dart';
-import 'package:app/pages/providers.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../../services/general_service.dart';
 import 'user_selection_page.dart';
 
@@ -117,7 +115,6 @@ class _LoginState extends State<Login> {
                     } else {
                       data = null;
                     }
-                    print(data);
 
                     if (response.error == null) {
                       final role = data["role"];

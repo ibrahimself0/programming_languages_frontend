@@ -141,7 +141,6 @@ class _EditApartmentScreenState extends State<EditApartmentScreen> {
       }),
     );
 
-    print(response.body);
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
@@ -155,8 +154,6 @@ class _EditApartmentScreenState extends State<EditApartmentScreen> {
       ).updateApartment(updatedApartment);
 
       Navigator.pop(context);
-    } else {
-      print("Failed: ${response.statusCode}");
     }
   }
 

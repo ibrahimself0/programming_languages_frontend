@@ -1,4 +1,4 @@
-const String ip = "192.168.1.7";
+const String ip = "10.18.47.30";
 const String baseUrl = "http://$ip:8000/api";
 
 const String userUrl = "$baseUrl/user";
@@ -37,7 +37,7 @@ const String tenantReservationCreateUrl =
 const String tenantReservationEditUrl =
     "$baseUrl/tenant/reservations/edit/{id}";
 const String tenantReservationCancelUrl =
-    "$baseUrl/tenant/reservations/cancel/{id}";
+    "$baseUrl/tenant/reservations/cancel";
 const String tenantRateApartmentUrl =
     "$baseUrl/tenant/rate/{id}";
 

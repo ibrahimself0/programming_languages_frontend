@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 
 import '../providers.dart';
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
+
 
 class _ProvinceBottomSheet extends StatelessWidget {
   final Function(String) onSelect;
@@ -91,11 +91,7 @@ class _OwnerAddApartmentScreenState extends State<OwnerAddApartmentScreen> {
     final data = jsonDecode(createResponse.body);
 
     if (createResponse.statusCode == 201 && data['apartment'] != null) {
-      print(201);
       apartment = Apartment.fromJson(data['apartment']);
-    } else {
-      print(500);
-      print(data);
     }
 
 
@@ -119,7 +115,6 @@ class _OwnerAddApartmentScreenState extends State<OwnerAddApartmentScreen> {
 
       final imageStreamResponse = await imageRequest.send();
       final imageResponse = await http.Response.fromStream(imageStreamResponse);
-      print("Upload response: ${imageResponse.statusCode}");
 
       if (imageResponse.statusCode == 201) {
         final imagesResponse = await http.get(
@@ -131,7 +126,6 @@ class _OwnerAddApartmentScreenState extends State<OwnerAddApartmentScreen> {
             'Authorization': 'Bearer $token',
           },
         );
-        print("GET images response: ${imagesResponse.body}");
         if (imagesResponse.statusCode == 200) {
           final imagesData = jsonDecode(imagesResponse.body);
           apartment?.images = (imagesData['images'] as List);
@@ -194,6 +188,7 @@ class _OwnerAddApartmentScreenState extends State<OwnerAddApartmentScreen> {
               const SizedBox(height: 10),
           
               TextFormField(
+                keyboardType: TextInputType.number,
                 controller: roomsController,
                 style: TextStyle(color: AppColors.cyan),
                 decoration: InputDecoration(
@@ -215,6 +210,7 @@ class _OwnerAddApartmentScreenState extends State<OwnerAddApartmentScreen> {
               const SizedBox(height: 10),
           
               TextFormField(
+                keyboardType: TextInputType.number,
                 controller: priceController,
                 style: TextStyle(color: AppColors.cyan),
                 decoration: InputDecoration(

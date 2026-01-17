@@ -1,33 +1,25 @@
-// import 'main_pages.dart';
 import 'package:app/constants/app_colors.dart';
 import 'package:app/data/notifiers.dart';
 import 'package:app/pages/profile_page.dart';
-import 'package:app/pages/providers.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 
 import 'ReservationsPage.dart';
 import 'my_apartment.dart';
 
-
 class OwnerNavBar extends StatefulWidget {
-  const OwnerNavBar({super.key , required this.ownerSelectedPage});
+  const OwnerNavBar({super.key, required this.ownerSelectedPage});
   final int ownerSelectedPage;
   @override
   State<OwnerNavBar> createState() => _OwnerNavBarState();
 }
 
 class _OwnerNavBarState extends State<OwnerNavBar> {
- 
-   List<Widget> listWidget = [
-    // HomeView(),
-    // HomeSecondaryView(),
+  List<Widget> listWidget = [
     MyApartments(),
-     ReservationsPage(),
+    ReservationsPage(),
     ProfilePage(),
   ];
-   late int ownersSelectedIndex = widget.ownerSelectedPage;
+  late int ownersSelectedIndex = widget.ownerSelectedPage;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
   @override
@@ -43,42 +35,7 @@ class _OwnerNavBarState extends State<OwnerNavBar> {
             backgroundColor: AppColors.primaryColor,
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("APP", style: TextStyle(color: AppColors.cyan)),
-              ],
-            ),
-          ),
-          drawer: Drawer(
-            elevation: 100,
-            surfaceTintColor: AppColors.cyan,
-            shadowColor: AppColors.cyan,
-            backgroundColor: AppColors.primaryColor,
-            child: Column(
-              children: [
-                SwitchListTile(
-                  inactiveTrackColor: AppColors.cyan,
-                  activeThumbColor: AppColors.cyan,
-                  secondary: const Icon(Icons.dark_mode),
-                  title: Text(
-                    "Dark Mode",
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: AppColors.cyan,
-                    ),
-                  ),
-                  value: isDarkModeNotifier.value,
-                  onChanged: (val) {
-                    setState(() {
-                      isDarkModeNotifier.value = val;
-                      if (isDarkModeNotifier.value) {
-                        AppColors.primaryColor = Colors.black;
-                      } else {
-                        AppColors.primaryColor = Colors.white;
-                      }
-                    });
-                  },
-                ),
-              ],
+              children: [Text("APP", style: TextStyle(color: AppColors.cyan))],
             ),
           ),
           body: Container(
@@ -113,12 +70,10 @@ class _OwnerNavBarState extends State<OwnerNavBar> {
                 icon: Icon(Icons.person, color: AppColors.cyan),
                 label: "Profile",
               ),
-              
-             
             ],
           ),
         );
-      }
+      },
     );
   }
 }

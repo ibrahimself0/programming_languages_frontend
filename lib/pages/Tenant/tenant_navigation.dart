@@ -18,7 +18,7 @@ class TenantNavBar extends StatefulWidget {
 class _TenantNavBarState extends State<TenantNavBar> {
   List<Widget> listWidget = [
     HomePage(),
-    MessagesPage(),
+    //MessagesPage(),
     BookingPage(),
     ProfilePage(),
   ];
@@ -44,39 +44,6 @@ class _TenantNavBarState extends State<TenantNavBar> {
               ],
             ),
           ),
-          drawer: Drawer(
-            elevation: 100,
-            surfaceTintColor: AppColors.cyan,
-            shadowColor: AppColors.cyan,
-            backgroundColor: AppColors.primaryColor,
-            child: Column(
-              children: [
-                SwitchListTile(
-                  inactiveTrackColor: AppColors.cyan,
-                  activeThumbColor: AppColors.cyan,
-                  secondary: const Icon(Icons.dark_mode),
-                  title: Text(
-                    "Dark Mode",
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: AppColors.cyan,
-                    ),
-                  ),
-                  value: isDarkModeNotifier.value,
-                  onChanged: (val) {
-                    setState(() {
-                      isDarkModeNotifier.value = val;
-                      if (isDarkModeNotifier.value) {
-                        AppColors.primaryColor = Colors.black;
-                      } else {
-                        AppColors.primaryColor = Colors.white;
-                      }
-                    });
-                  },
-                ),
-              ],
-            ),
-          ),
           body: Container(
             padding: const EdgeInsets.all(5),
             child: listWidget.elementAt(selectedIndex),
@@ -85,9 +52,6 @@ class _TenantNavBarState extends State<TenantNavBar> {
             currentIndex: selectedIndex,
             onTap: (value) {
               setState(() {
-                if(value == 3){
-
-                }
                 selectedIndex = value;
               });
             },
@@ -101,11 +65,6 @@ class _TenantNavBarState extends State<TenantNavBar> {
                 backgroundColor: AppColors.cyan,
                 icon: Icon(Icons.home, color: AppColors.cyan),
                 label: "Home",
-              ),
-              BottomNavigationBarItem(
-                backgroundColor: AppColors.primaryColor,
-                icon: Icon(Icons.email, color: AppColors.cyan),
-                label: "Message",
               ),
               BottomNavigationBarItem(
                 backgroundColor: AppColors.primaryColor,

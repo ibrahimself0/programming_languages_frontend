@@ -3,7 +3,7 @@ import 'package:app/pages/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
   runApp(
     MultiProvider(
       providers: [
@@ -14,7 +14,6 @@ void main() {
     ),
   );
 }
-
 class AppEntry extends StatefulWidget {
   const AppEntry({super.key});
 

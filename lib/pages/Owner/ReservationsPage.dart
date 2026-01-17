@@ -19,7 +19,6 @@ class _ReservationCardState extends State<ReservationCard> {
   @override
   Widget build(BuildContext context) {
     final bool isAccepted = widget.reservation['status'] == 'approved';
-    print(isAccepted);
     return AnimatedBuilder(
       animation: Listenable.merge([pending, accepted]),
       builder: (context, child) {
@@ -55,7 +54,7 @@ class _ReservationCardState extends State<ReservationCard> {
                         Row(
                           children: [
                             Text(
-                              "Reservation #${widget.reservation['id']}",
+                              "Apartment Id #${widget.reservation['apartment_id']}",
                               style: TextStyle(
                                 color: AppColors.cyan,
                                 fontWeight: FontWeight.w600,
@@ -238,6 +237,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
       final response = await getApartmentReservations(apt.id);
       if (response.error == null) {
         final data = response.data as Map<String, dynamic>;
+        print(data);
         final list = List<Map<String, dynamic>>.from(data['reservations']);
         reservations.addAll(list);
       }
@@ -299,36 +299,8 @@ class _ReservationsPageState extends State<ReservationsPage> {
 
                 return TabBarView(
                   children: [
-                    ValueListenableBuilder(
-                      valueListenable: pending,
-                      builder: (context, value, child) {
-                        print("pending ${pending.value}");
-                        return ListView.builder(
-                          padding: const EdgeInsets.only(top: 8),
-                          itemCount: pending.value.length,
-                          itemBuilder: (context, index) {
-                            return ReservationCard(
-                              reservation: pending.value[index],
-                            );
-                          },
-                        );
-                      },
-                    ),
-                    ValueListenableBuilder(
-                      valueListenable: accepted,
-                      builder: (context, value, child) {
-                        print("accepted ${accepted.value}");
-                        return ListView.builder(
-                          padding: const EdgeInsets.only(top: 8),
-                          itemCount: accepted.value.length,
-                          itemBuilder: (context, index) {
-                            return ReservationCard(
-                              reservation: accepted.value[index],
-                            );
-                          },
-                        );
-                      },
-                    ),
+                    buildList(pending, "No pending reservations"),
+                    buildList(accepted, "No accepted reservations"),
                   ],
                 );
               },
@@ -336,6 +308,40 @@ class _ReservationsPageState extends State<ReservationsPage> {
           );
         },
       ),
+    );
+  }
+
+  Widget buildList(
+    ValueNotifier<List<Map<String, dynamic>>> list,
+    String text,
+  ) {
+    return ValueListenableBuilder(
+      valueListenable: list,
+      builder: (context, value, child) {
+        if (list.value.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.hourglass_empty, size: 60, color: Colors.grey),
+                const SizedBox(height: 12),
+                Text(
+                  text,
+                  style: const TextStyle(color: Colors.grey, fontSize: 18),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return ListView.builder(
+          padding: const EdgeInsets.only(top: 8),
+          itemCount: list.value.length,
+          itemBuilder: (context, index) {
+            return ReservationCard(reservation: list.value[index]);
+          },
+        );
+      },
     );
   }
 }

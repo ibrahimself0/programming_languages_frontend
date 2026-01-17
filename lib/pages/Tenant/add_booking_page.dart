@@ -97,7 +97,6 @@ class _AddBookingPageState extends State<AddBookingPage> {
   Future<void> _bookApartment() async {
     setState(() => isLoading = true);
     try {
-      print("SENDING REQUEST");
       ApiResponse apiResponse = await createBook().createReservation(
         widget.apartment['id'],
         _startDateController.text,
@@ -112,18 +111,16 @@ class _AddBookingPageState extends State<AddBookingPage> {
           context,
         ).showSnackBar(SnackBar(content: Text(apiResponse.error.toString())));
       }
-      Navigator.pop(context);
     } catch (e) {
-      print(e);
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text("error: $e")));
     } finally {
       setState(() => isLoading = false);
     }
-    print("REQUEST FINISHED");
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primaryColor,
@@ -291,13 +288,11 @@ class createBook {
     );
     if (response.statusCode == 201) {
       final data = jsonDecode(response.body)['message'];
-      print(" data : $data");
       apiResponse.data = data;
     }
 
     if (response.statusCode != 201) {
       apiResponse.error = jsonDecode(response.body)['message'];
-      print(apiResponse.error);
     }
     return apiResponse;
   }
